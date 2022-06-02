@@ -1,0 +1,9 @@
+{
+    "name": "g28/eucapacito",
+    "autoload": {
+        "psr-4": {
+            "G28\\Eucapacito\\": "src/"
+        }
+    },
+    "require": {}
+}
