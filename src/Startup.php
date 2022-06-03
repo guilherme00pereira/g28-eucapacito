@@ -3,7 +3,7 @@
 namespace G28\Eucapacito;
 
 use G28\Eucapacito\Core\Plugin;
-use G28\Eucapacito\Api\Endpoints;
+use G28\Eucapacito\Api\Registrator;
 
 class Startup {
 
@@ -21,8 +21,7 @@ class Startup {
 			Plugin::getInstance($root);
 		} );
         add_action( 'rest_api_init', function (){
-			$endpoints = new Endpoints();
-			$endpoints->register_routes();
+			new Registrator();
 		});
     }
 
