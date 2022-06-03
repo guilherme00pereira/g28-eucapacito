@@ -54,21 +54,23 @@ class User
 
     public function updateWPUser(): array
     {
-        $name       = explode(' ', $this->name, 2);
+        $name  = explode(' ', $this->name, 2);
         $user  = wp_update_user([
+            'ID'                    => $this->id,
             'user_email'            => $this->email,
             'first_name'            => $name[0],
             'last_name'             => $name[1],
-            'data_de_nascimento'    => $this->birthdate,
-            'telefone'              => $this->phone,
-            'pais'                  => $this->country,
-            'estado'                => $this->state,
-            'cidade'                => $this->city
         ]);
+        update_user_meta( $this->id,'data_de_nascimento', $this->birthdate);
+        update_user_meta( $this->id,'telefone', $this->phone);
+        update_user_meta( $this->id,'pais', $this->country);
+        update_user_meta( $this->id,'estado', $this->state);
+        update_user_meta( $this->id,'cidade', $this->city);
+
         if (is_wp_error($user)) {
-            return [false, 'Erro ao atualizar.'];
+            return [false, 'Erro ao atualizar perfil'];
         }
-        return [true, ''];
+        return [true, 'Seu perfil foi atualizado com sucesso'];
     }
 
     public function recoverUserPassword($email)

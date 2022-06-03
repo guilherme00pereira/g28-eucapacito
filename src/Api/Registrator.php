@@ -59,7 +59,14 @@ class Registrator extends WP_REST_Controller {
     public function updateUser( $request ): WP_REST_Response
     {
         $user = new User();
-        $user->setName($request['name']);
+        $user->setId( $request['id'])
+                ->setEmail( $request['email'] )
+                ->setName( $request['full_name'] )
+                ->setBirthdate( $request['b_day'], $request['b_month'], $request['b_year'] )
+                ->setPhone( $request['phone_ddd'], $request['phone_number'] )
+                ->setCountry( $request['country'] )
+                ->setState( $request['state'] )
+                ->setCity( $request['city'] );
         list($created, $response) = $user->updateWPUser();
         if( $created ) {
             return new WP_REST_Response( $response, 200 );
