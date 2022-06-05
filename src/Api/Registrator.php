@@ -17,6 +17,7 @@ class Registrator extends WP_REST_Controller {
 
     public function register_routes()
 	{
+        $jwt            = 'jwt-auth/';
 		$namespace      = 'eucapacito/v1';
         register_rest_route( $namespace, '/ping', array(
 
@@ -33,6 +34,14 @@ class Registrator extends WP_REST_Controller {
 			'methods'       => WP_REST_Server::EDITABLE,
 			'callback'      => array( $this, 'recoverPassword' )
 		) );
+        register_rest_route( $namespace, '/changepwd', array(
+            'methods'       => WP_REST_Server::EDITABLE,
+            'callback'      => array( $this, 'changePassword' )
+        ) );
+        register_rest_route( $namespace, "/page/(?P<id>\d+)", array(
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( $this, 'getPage' )
+        ) );
 	}
 
     public function addFieldsToApi()
@@ -74,12 +83,47 @@ class Registrator extends WP_REST_Controller {
         return new WP_REST_Response( $response , 500 );
     }
 
-
-
-    public function recoverPassword( $request )
+    public function recoverPassword( $request ): WP_REST_Response
     {
-        $email      = $request['email'];
-        $user       = get_user_by( 'email ', $email );
+        if (is_email($request['email'])) {
+            if (!email_exists($request['email'])) {
+                return new WP_REST_Response("E-mail não cadastrado", 500);
+            } else {
+                $user       = new User();
+                $newPwd     = $user->setUserByEmail( $request['email'] )->generateNewPassword();
+                wp_mail(
+                    $request['email'],
+                    "Eu Capacito - Recuperação de senha",
+                    "Sua nova senha: ${newPwd}"
+                );
+                return new WP_REST_Response( "Nova senha enviada para e-mail informado" , 200 );
+            }
+        } else {
+            return new WP_REST_Response("E-mail inválido.", 500);
+        }
+    }
+
+    public function changePassword( $request ): WP_REST_Response
+    {
+        $user_id = $request['id'];
+        $user = get_user_by( 'id', $user_id );
+        $old = $request['oldPassword'];
+        $new = $request['newPassword'];
+        $hash = $user->data->user_pass;
+        if( wp_check_password( $old, $hash ) ){
+            wp_set_password( $new, $user_id );
+            return new WP_REST_Response( "Senha alterada com sucesso!" , 200 );
+        }else {
+            return new WP_REST_Response("Senha atual inválida.", 500);
+        }
+    }
+
+    public function getPage( $request )
+    {
+        $pageId = $request['id'];
+        $content = get_post_meta($pageId, 'gdlr-core-page-builder');
+        echo $content;
+
     }
 
 }

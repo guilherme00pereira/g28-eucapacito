@@ -2,9 +2,9 @@
 /*
 Plugin Name: G28 EuCapacito Plugin
 Plugin URI: #
-Description: Adiciona uma página de negociação com integração ao checkout transparente do Arespay
-Version: 0.1.2
-Author: Guilherme Pereira G28
+Description: Funcionalidades e endpoints para o webapp feito em React
+Version: 0.1.5
+Author: Guilherme Pereira - G28
 Author URI: #
 Text Domain: g28-eucapacito
 Domain Path: /languages

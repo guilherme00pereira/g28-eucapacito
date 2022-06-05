@@ -18,6 +18,15 @@ class User
 
     public function __construct()
     {
+
+    }
+
+    public function setUserByEmail( $mail ): User
+    {
+        $user           = get_user_by( 'email', $mail);
+        $this->id       = $user->ID;
+        $this->email    = $mail;
+        return $this;
     }
 
     public function createWPUser(): array
@@ -73,11 +82,12 @@ class User
         return [true, 'Seu perfil foi atualizado com sucesso'];
     }
 
-    public function recoverUserPassword($email)
+    public function generateNewPassword(): string
     {
-        $user = get_user_by('email', $email);
-
-        wp_insert_user([]);
+        $data = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz';
+        $pwd = substr(str_shuffle($data), 0, 8);
+        wp_set_password( $pwd, $this->id );
+        return $pwd;
     }
 
     /**
