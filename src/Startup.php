@@ -4,6 +4,7 @@ namespace G28\Eucapacito;
 
 use G28\Eucapacito\Core\Plugin;
 use G28\Eucapacito\Api\Registrator;
+use G28\Eucapacito\Core\Controller;
 
 class Startup {
 
@@ -19,6 +20,7 @@ class Startup {
     public function run( string $root ) {
         add_action( 'plugins_loaded', function () use ( $root ) {
 			Plugin::getInstance($root);
+			new Controller();
 		} );
         add_action( 'rest_api_init', function (){
 			new Registrator();
