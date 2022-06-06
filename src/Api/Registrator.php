@@ -9,36 +9,51 @@ use WP_REST_Server;
 
 class Registrator extends WP_REST_Controller {
 
+    protected string $jwt;
+    protected string $eucapacito_namespace;
+
     public function __construct()
     {
+        $this->jwt                      = 'jwt-auth/';
+        $this->eucapacito_namespace     = 'eucapacito/v1';
         $this->register_routes();
         $this->addFieldsToApi();
     }
 
     public function register_routes()
 	{
-        $jwt            = 'jwt-auth/';
-		$namespace      = 'eucapacito/v1';
-        register_rest_route( $namespace, '/ping', array(
+
+        register_rest_route( $this->eucapacito_namespace, '/ping', array(
 
         ));
-		register_rest_route( $namespace, '/register', array(
-			'methods'       => WP_REST_Server::EDITABLE,
-			'callback'      => array( $this, 'registerUser' )
-		) );
-        register_rest_route( $namespace, '/update-profile', array(
-			'methods'       => WP_REST_Server::EDITABLE,
-			'callback'      => array( $this, 'updateUser' )
-		) );
-        register_rest_route( $namespace, '/recoverpwd', array(
-			'methods'       => WP_REST_Server::EDITABLE,
-			'callback'      => array( $this, 'recoverPassword' )
-		) );
-        register_rest_route( $namespace, '/changepwd', array(
+
+        // USER ENDPOINTS
+        register_rest_route( $this->eucapacito_namespace, '/register', array(
             'methods'       => WP_REST_Server::EDITABLE,
-            'callback'      => array( $this, 'changePassword' )
+            'callback'      => array( UserEndpoints::class, 'registerUser' )
         ) );
-        register_rest_route( $namespace, "/page/(?P<id>\d+)", array(
+        register_rest_route( $this->eucapacito_namespace, '/update-profile', array(
+            'methods'       => WP_REST_Server::EDITABLE,
+            'callback'      => array( UserEndpoints::class, 'updateUser' )
+        ) );
+        register_rest_route( $this->eucapacito_namespace, '/recoverpwd', array(
+            'methods'       => WP_REST_Server::EDITABLE,
+            'callback'      => array( UserEndpoints::class, 'recoverPassword' )
+        ) );
+        register_rest_route( $this->eucapacito_namespace, '/changepwd', array(
+            'methods'       => WP_REST_Server::EDITABLE,
+            'callback'      => array( UserEndpoints::class, 'changePassword' )
+        ) );
+
+
+        // PARTNERS ENDPOINTS
+        register_rest_route( $this->eucapacito_namespace, '/partners', array(
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( PartnersEndpoints::class, 'getPartners' )
+        ) );
+
+
+        register_rest_route( $this->eucapacito_namespace, "/page/(?P<id>\d+)", array(
             'methods'       => WP_REST_Server::READABLE,
             'callback'      => array( $this, 'getPage' )
         ) );
@@ -50,73 +65,13 @@ class Registrator extends WP_REST_Controller {
             $response->data[ 'email' ] = $user->user_email;
             return $response;
         }, 10, 3 );
+        add_filter( 'rest_prepare_curso_ec', function( $response, $post, $request ) {
+            $response->data[ 'duration' ] = get_post_meta($post->ID, '_learndash_course_grid_duration');
+            return $response;
+        }, 10, 3 );
     }
 
-    public function registerUser( $request ): WP_REST_Response
-    {
-        $user = new User();
-        $user->setEmail($request['email'])
-            ->setName($request['name'])
-            ->setPassword($request['password']);
-        list($created, $response) = $user->createWPUser();
-        if( $created ) {
-            return new WP_REST_Response( $response, 200 );
-        }
-        return new WP_REST_Response( $response , 500 );
-    }
 
-    public function updateUser( $request ): WP_REST_Response
-    {
-        $user = new User();
-        $user->setId( $request['id'])
-                ->setEmail( $request['email'] )
-                ->setName( $request['full_name'] )
-                ->setBirthdate( $request['b_day'], $request['b_month'], $request['b_year'] )
-                ->setPhone( $request['phone_ddd'], $request['phone_number'] )
-                ->setCountry( $request['country'] )
-                ->setState( $request['state'] )
-                ->setCity( $request['city'] );
-        list($created, $response) = $user->updateWPUser();
-        if( $created ) {
-            return new WP_REST_Response( $response, 200 );
-        }
-        return new WP_REST_Response( $response , 500 );
-    }
-
-    public function recoverPassword( $request ): WP_REST_Response
-    {
-        if (is_email($request['email'])) {
-            if (!email_exists($request['email'])) {
-                return new WP_REST_Response("E-mail não cadastrado", 500);
-            } else {
-                $user       = new User();
-                $newPwd     = $user->setUserByEmail( $request['email'] )->generateNewPassword();
-                wp_mail(
-                    $request['email'],
-                    "Eu Capacito - Recuperação de senha",
-                    "Sua nova senha: ${newPwd}"
-                );
-                return new WP_REST_Response( "Nova senha enviada para e-mail informado" , 200 );
-            }
-        } else {
-            return new WP_REST_Response("E-mail inválido.", 500);
-        }
-    }
-
-    public function changePassword( $request ): WP_REST_Response
-    {
-        $user_id = $request['id'];
-        $user = get_user_by( 'id', $user_id );
-        $old = $request['oldPassword'];
-        $new = $request['newPassword'];
-        $hash = $user->data->user_pass;
-        if( wp_check_password( $old, $hash ) ){
-            wp_set_password( $new, $user_id );
-            return new WP_REST_Response( "Senha alterada com sucesso!" , 200 );
-        }else {
-            return new WP_REST_Response("Senha atual inválida.", 500);
-        }
-    }
 
     public function getPage( $request )
     {
