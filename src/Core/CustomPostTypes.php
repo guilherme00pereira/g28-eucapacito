@@ -8,6 +8,7 @@ class CustomPostTypes
     {
         add_action( 'init', [ $this, 'registerPartnersCategoryTaxonomy']);
         add_action( 'init', [ $this, 'registerPartnersPostType'] );
+        add_filter( 'register_post_type_args', [ $this, 'registerPartnersPostTypeArgs' ], 10, 2 );
     }
 
     public function registerPartnersPostType()
@@ -38,9 +39,18 @@ class CustomPostTypes
                 'hierarchical'  => true,
                 'label'         => 'Categoria Parceiros',
                 'query_var'     => true,
+                'show_in_rest'  => true,
                 'has_archive'   => true,
                 'rewrite'       => array('slug' => 'partners_category')
             ]
         );
+    }
+
+    public function registerPartnersPostTypeArgs( $args, $post_type )
+    {
+        if ( 'partner' === $post_type ) {
+            $args['show_in_rest'] = true;
+        }
+        return $args;
     }
 }
