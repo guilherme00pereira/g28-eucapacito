@@ -23,7 +23,7 @@ class PartnersEndpoints
             $category = get_the_terms(get_the_ID(), 'partners_category');
             $partners[] = [
                 'name'      => get_the_title(),
-                'image'    => wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()))[0],
+                'image'    => wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), "medium")[0],
                 'category'  => is_bool($category) ? $category : $category[0]->name
             ];
         }
