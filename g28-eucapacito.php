@@ -2,8 +2,8 @@
 /*
 Plugin Name: G28 EuCapacito Plugin
 Plugin URI: #
-Description: Funcionalidades e endpoints para o webapp feito em React
-Version: 0.1.85
+Description: Funcionalidades e endpoints da Api para o webapp feito em React
+Version: 0.1.10
 Author: Guilherme Pereira - G28
 Author URI: #
 Text Domain: g28-eucapacito
