@@ -32,6 +32,10 @@ class Startup {
         add_action( 'rest_api_init', function (){
 			new Registrator();
 		});
+		add_action( 'admin_init', function() {
+			$subscriber = get_role('subscriber');
+			$subscriber->add_cap('upload_files');
+		});
     }
 
 	

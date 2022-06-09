@@ -2,6 +2,7 @@
 
 namespace G28\Eucapacito\Api;
 
+use G28\Eucapacito\Core\Logger;
 use G28\Eucapacito\Core\OptionsManager;
 use G28\Eucapacito\Models\User;
 use WP_REST_Response;
@@ -78,6 +79,14 @@ class UserEndpoints
         }else {
             return new WP_REST_Response($this->options[OptionsManager::PASSWORD_INVALID], 500);
         }
+    }
+
+    public function avatar( $request ): WP_REST_Response
+    {
+        
+        var_dump($request['file'][0]);
+        return new WP_REST_Response('ok', 200);
+        
     }
 
 }
