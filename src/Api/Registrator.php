@@ -24,7 +24,8 @@ class Registrator extends WP_REST_Controller {
 	{
 
         register_rest_route( $this->eucapacito_namespace, '/ping', array(
-
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( $this, 'ping' )
         ));
 
         // USER ENDPOINTS
@@ -66,7 +67,9 @@ class Registrator extends WP_REST_Controller {
     public function addFieldsToApi()
     {
         add_filter( 'rest_prepare_user', function( $response, $user, $request ) {
-            $response->data[ 'email' ] = $user->user_email;
+            $response->data[ 'email' ]      = $user->user_email;
+            $meta                           = get_user_meta( $user->ID, 'avatar_id' );
+            $response->data[ 'avatar' ]     = wp_get_attachment_image_url( $meta[0] );
             return $response;
         }, 10, 3 );
         add_filter( 'rest_prepare_curso_ec', function( $response, $post, $request ) {
@@ -75,7 +78,10 @@ class Registrator extends WP_REST_Controller {
         }, 10, 3 );
     }
 
-
+    public function ping( $request )
+    {
+        echo get_user_meta( 52351, 'avatar_id' )[0] . PHP_EOL . wp_get_attachment_image_url( 13076 );
+    }
 
     public function getPage( $request )
     {
