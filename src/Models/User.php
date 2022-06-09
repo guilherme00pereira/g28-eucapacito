@@ -2,6 +2,8 @@
 
 namespace G28\Eucapacito\Models;
 
+use G28\Eucapacito\Core\OptionsManager;
+
 class User
 {
 
@@ -18,7 +20,7 @@ class User
 
     public function __construct()
     {
-
+        $this->options = get_option(OptionsManager::OPTIONS_NAME);
     }
 
     public function setUserByEmail( $mail ): User
@@ -45,7 +47,7 @@ class User
                     'role'           => 'subscriber'
                 ]);
                 if (is_wp_error($newUserId)) {
-                    return [false, 'Erro ao cadastrar.'];
+                    return [false, $this->options[OptionsManager::REGISTER_ERROR]];
                 }
                 return [true, [
                     'id'            => $newUserId,
@@ -54,10 +56,10 @@ class User
                     'last_name'     => $name[1]
                 ]];
             } else {
-                return [false, 'e-mail já cadastrado'];
+                return [false, $this->options[OptionsManager::HAVE_MAIL]];
             }
         } else {
-            return [false, 'e-mail inválido'];
+            return [false, $this->options[OptionsManager::INVALID_MAIL]];
         }
     }
 
@@ -77,9 +79,9 @@ class User
         update_user_meta( $this->id,'cidade', $this->city);
 
         if (is_wp_error($user)) {
-            return [false, 'Erro ao atualizar perfil'];
+            return [false, $this->options[OptionsManager::UPDATE_PROFILE_ERROR]];
         }
-        return [true, 'Seu perfil foi atualizado com sucesso'];
+        return [true, $this->options[OptionsManager::UPDATE_PROFILE_SUCCESS]];
     }
 
     public function generateNewPassword(): string

@@ -2,11 +2,17 @@
 
 namespace G28\Eucapacito\Api;
 
+use G28\Eucapacito\Core\OptionsManager;
 use G28\Eucapacito\Models\User;
 use WP_REST_Response;
 
 class UserEndpoints
 {
+
+    public function __construct()
+    {
+        $this->options = get_option(OptionsManager::OPTIONS_NAME);
+    }
 
     public function registerUser( $request ): WP_REST_Response
     {
@@ -43,7 +49,7 @@ class UserEndpoints
     {
         if (is_email($request['email'])) {
             if (!email_exists($request['email'])) {
-                return new WP_REST_Response("E-mail não cadastrado", 500);
+                return new WP_REST_Response($this->options[OptionsManager::DONT_HAVE_MAIL], 500);
             } else {
                 $user       = new User();
                 $newPwd     = $user->setUserByEmail( $request['email'] )->generateNewPassword();
@@ -52,10 +58,10 @@ class UserEndpoints
                     "Eu Capacito - Recuperação de senha",
                     "Sua nova senha: ${newPwd}"
                 );
-                return new WP_REST_Response( "Nova senha enviada para e-mail informado" , 200 );
+                return new WP_REST_Response( $this->options[OptionsManager::PASSWORD_SEND_MAIL] , 200 );
             }
         } else {
-            return new WP_REST_Response("E-mail inválido.", 500);
+            return new WP_REST_Response($this->options[OptionsManager::INVALID_MAIL], 500);
         }
     }
 
@@ -68,9 +74,9 @@ class UserEndpoints
         $hash = $user->data->user_pass;
         if( wp_check_password( $old, $hash ) ){
             wp_set_password( $new, $user_id );
-            return new WP_REST_Response( "Senha alterada com sucesso!" , 200 );
+            return new WP_REST_Response( $this->options[OptionsManager::PASSWORD_SUCCESS] , 200 );
         }else {
-            return new WP_REST_Response("Senha atual inválida.", 500);
+            return new WP_REST_Response($this->options[OptionsManager::PASSWORD_INVALID], 500);
         }
     }
 
