@@ -1,0 +1,8 @@
+.eucap-banner-box {
+    margin: 1.5em;
+}
+
+.eucap-banners {
+    display: flex;
+    flex-direction: row;
+}

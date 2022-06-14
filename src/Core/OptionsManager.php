@@ -15,6 +15,7 @@ class OptionsManager
     const PASSWORD_SEND_MAIL            = 'pwd_send_mail';
     const PASSWORD_INVALID              = 'pwd_invalid';
     const PASSWORD_SUCCESS              = 'pwd_success';
+    const HOME_BANNERS_OPTION           = 'eucapacito_home_banners';
 
     public function __construct()
     {

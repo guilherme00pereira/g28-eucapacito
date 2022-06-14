@@ -57,6 +57,12 @@ class Registrator extends WP_REST_Controller {
             'callback'      => array( PartnersEndpoints::class, 'getPartners' )
         ) );
 
+        // SEARCH ENDPOINTS
+        register_rest_route( $this->eucapacito_namespace, '/filters', array(
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( SearchEndpoints::class, 'getFilters' )
+        ) );
+
 
         register_rest_route( $this->eucapacito_namespace, "/page/(?P<id>\d+)", array(
             'methods'       => WP_REST_Server::READABLE,
