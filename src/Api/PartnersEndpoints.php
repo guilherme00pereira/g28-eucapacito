@@ -17,7 +17,6 @@ class PartnersEndpoints
             'post_status'   => 'publish',
             'numberposts'   => -1
         ]);
-
         while ($query->have_posts()) {
             $query->the_post();
             $category = get_the_terms(get_the_ID(), 'partners_category');
@@ -27,10 +26,8 @@ class PartnersEndpoints
                 'category'  => is_bool($category) ? $category : $category[0]->name
             ];
         }
-
-        wp_reset_query();
+        wp_reset_postdata();
         return new WP_REST_Response( $partners , 200 );
-
     }
 
 }

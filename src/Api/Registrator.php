@@ -58,11 +58,14 @@ class Registrator extends WP_REST_Controller {
         ) );
 
         // SEARCH ENDPOINTS
+        register_rest_route( $this->eucapacito_namespace, '/search', array(
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( SearchEndpoints::class, 'getSearch' )
+        ) );
         register_rest_route( $this->eucapacito_namespace, '/filters', array(
             'methods'       => WP_REST_Server::READABLE,
             'callback'      => array( SearchEndpoints::class, 'getFilters' )
         ) );
-
 
         register_rest_route( $this->eucapacito_namespace, "/page/(?P<id>\d+)", array(
             'methods'       => WP_REST_Server::READABLE,
@@ -86,7 +89,8 @@ class Registrator extends WP_REST_Controller {
 
     public function ping( $request )
     {
-        echo get_user_meta( 52351, 'avatar_id' )[0] . PHP_EOL . wp_get_attachment_image_url( 13076 );
+        //echo get_user_meta( 52351, 'avatar_id' )[0] . PHP_EOL . wp_get_attachment_image_url( 13076 );
+        echo get_post_meta( 10429, 'responsavel')[0]['guid'];
     }
 
     public function getPage( $request )

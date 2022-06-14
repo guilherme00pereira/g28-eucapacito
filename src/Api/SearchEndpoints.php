@@ -7,7 +7,7 @@ use WP_Query;
 
 class SearchEndpoints
 {
-    public function getFilters()
+    public function getFilters(): WP_REST_Response
     {
         $filters = [
             'nivel'                 => [],
@@ -22,13 +22,52 @@ class SearchEndpoints
                 'hide_empty' => false,
             ));
             foreach( $terms as $term ){
-                array_push($filters[$term->taxonomy], [
-                    'id'        => $term->term_id,
-                    'name'      => $term->name,
-                    'count'     => $term->count,
-                ]);
+                $filters[$term->taxonomy][] = [
+                    'id' => $term->term_id,
+                    'name' => $term->name,
+                    'count' => $term->count,
+                ];
             }
         }
         return new WP_REST_Response( $filters , 200 );
+    }
+
+    public function getSearch( $request ): WP_REST_Response
+    {
+        $courses = [];
+        $args = [
+            'post_type'         => 'curso_ec',
+            'posts_per_page'    => 15,
+            'page'              => $request['page'] ?? 1,
+            's'                 => $request['search']
+        ];
+//        $args['tax_query'] = [
+//            [
+//                'taxonomy'  => 'nivel',
+//                'field'     => 'name',
+//                'terms'     => 'Intermediario'
+//            ]
+//        ];
+        $query = new WP_Query( $args );
+        while ($query->have_posts()) {
+            $query->the_post();
+            $postId = get_the_ID();
+            $partnerId = wp_get_post_terms( $postId, 'parceiro_ec');
+            $courses[] = [
+                'id'                => $postId,
+                'slug'              => basename(get_permalink($postId)),
+                'title'             => $query->post->post_title,
+                'type'              => 'curso_ec',
+                'logo'              => get_post_meta( $postId, 'responsavel')[0]['guid']
+            ];
+        }
+        $response = new WP_REST_Response( [
+            'courses'   => $courses,
+            'total'     => $query->found_posts
+        ]);
+        $response->set_status(200);
+        $response->header( 'x-wp-totalpages', $query->max_num_pages);
+        wp_reset_postdata();
+        return $response;
     }
 }
