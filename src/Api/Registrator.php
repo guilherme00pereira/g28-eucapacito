@@ -60,11 +60,7 @@ class Registrator extends WP_REST_Controller {
         // SEARCH ENDPOINTS
         register_rest_route( $this->eucapacito_namespace, '/search', array(
             'methods'       => WP_REST_Server::READABLE,
-            'callback'      => array( SearchEndpoints::class, 'getSearch' )
-        ) );
-        register_rest_route( $this->eucapacito_namespace, '/filters', array(
-            'methods'       => WP_REST_Server::READABLE,
-            'callback'      => array( SearchEndpoints::class, 'getFilters' )
+            'callback'      => array( SearchEndpoints::getInstance(), 'getSearch' )
         ) );
 
         // PAGES ENDPOINTS
@@ -91,7 +87,11 @@ class Registrator extends WP_REST_Controller {
     public function ping( $request )
     {
         //echo get_user_meta( 52351, 'avatar_id' )[0] . PHP_EOL . wp_get_attachment_image_url( 13076 );
-        echo get_post_meta( 10429, 'responsavel')[0]['guid'];
+        //echo get_post_meta( 10429, 'responsavel')[0]['guid'];
+        $t = SearchEndpoints::getInstance()->getTaxonomies();
+        $tr = wp_get_post_terms( 10429, $t );
+        $res = array_column($tr, 'term_id');
+        echo array_intersect([232], $res)[0];
     }
 
     

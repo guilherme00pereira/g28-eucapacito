@@ -2,21 +2,81 @@
 
 namespace G28\Eucapacito\Api;
 
+use G28\Eucapacito\Core\Logger;
 use WP_REST_Response;
 use WP_Query;
 
 class SearchEndpoints
 {
-    public function getFilters(): WP_REST_Response
+    protected static ?SearchEndpoints $_instance = null;
+    private array $taxonomies;
+
+    public function __construct()
     {
-        $filters = [
-            'nivel'                 => [],
-            'avaliao'               => [],
-            'categoria_de_curso_ec' => [],
-            'parceiro_ec'           => []
+        $this->taxonomies = get_object_taxonomies( 'curso_ec' );
+    }
+
+    public static function getInstance(): ?SearchEndpoints {
+        if ( is_null( self::$_instance ) ) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
+
+    public function getSearch( $request ): WP_REST_Response
+    {
+        $courses = [];
+        $args = [
+            'post_type'         => 'curso_ec',
+            'posts_per_page'    => 15,
+            'paged'             => $request['page'],
+            's'                 => $request['search']
         ];
-        $taxonomies = get_object_taxonomies( 'curso_ec' );
-        foreach( $taxonomies as $taxonomy ){
+        if($request['t']) {
+            $filteredTerms = explode(',', $request['t']);
+            $args['tax_query'] = [ 'relation' => 'OR' ];
+            foreach( $this->taxonomies as $taxonomy ) {
+                $args['tax_query'][] = [
+                    [
+                        'taxonomy' => $taxonomy,
+                        'field' => 'term_id',
+                        'terms' => $filteredTerms,
+                    ]
+                ];
+            }
+        }
+        $query = new WP_Query( $args );
+        Logger::getInstance()->add($query->have_posts());
+        while ($query->have_posts()) {
+            $query->the_post();
+            $postId = get_the_ID();
+            $terms = wp_get_post_terms( $postId, $this->getTaxonomies());
+            $courses[] = [
+                'id'                => $postId,
+                'slug'              => basename(get_permalink($postId)),
+                'title'             => $query->post->post_title,
+                'type'              => 'curso_ec',
+                'logo'              => get_post_meta( $postId, 'responsavel')[0]['guid'],
+                'terms'             => array_column($terms, 'term_id')
+            ];
+        }
+        $filters = $this->selectFilters();
+        $response = new WP_REST_Response( [
+            'filters'   => $filters,
+            'courses'   => $courses,
+            'total'     => $query->found_posts
+        ]);
+        $response->set_status(200);
+        $response->header( 'x-wp-totalpages', $query->max_num_pages);
+        wp_reset_postdata();
+        return $response;
+    }
+
+    private function selectFilters(): array
+    {
+        $filters = [];
+        foreach( $this->taxonomies as $taxonomy ){
+            $filters[$taxonomy] = [];
             $terms = get_terms(array(
                 'taxonomy' => $taxonomy,
                 'hide_empty' => false,
@@ -29,45 +89,14 @@ class SearchEndpoints
                 ];
             }
         }
-        return new WP_REST_Response( $filters , 200 );
+        return $filters;
     }
 
-    public function getSearch( $request ): WP_REST_Response
+    /**
+     * @return array|string[]|\WP_Taxonomy[]
+     */
+    public function getTaxonomies(): array
     {
-        $courses = [];
-        $args = [
-            'post_type'         => 'curso_ec',
-            'posts_per_page'    => 15,
-            'paged'              => $request['page'],
-            's'                 => $request['search']
-        ];
-//        $args['tax_query'] = [
-//            [
-//                'taxonomy'  => 'nivel',
-//                'field'     => 'name',
-//                'terms'     => 'Intermediario'
-//            ]
-//        ];
-        $query = new WP_Query( $args );
-        while ($query->have_posts()) {
-            $query->the_post();
-            $postId = get_the_ID();
-            $partnerId = wp_get_post_terms( $postId, 'parceiro_ec');
-            $courses[] = [
-                'id'                => $postId,
-                'slug'              => basename(get_permalink($postId)),
-                'title'             => $query->post->post_title,
-                'type'              => 'curso_ec',
-                'logo'              => get_post_meta( $postId, 'responsavel')[0]['guid']
-            ];
-        }
-        $response = new WP_REST_Response( [
-            'courses'   => $courses,
-            'total'     => $query->found_posts
-        ]);
-        $response->set_status(200);
-        $response->header( 'x-wp-totalpages', $query->max_num_pages);
-        wp_reset_postdata();
-        return $response;
+        return $this->taxonomies;
     }
 }
