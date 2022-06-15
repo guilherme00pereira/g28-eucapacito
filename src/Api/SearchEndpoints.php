@@ -38,7 +38,7 @@ class SearchEndpoints
         $args = [
             'post_type'         => 'curso_ec',
             'posts_per_page'    => 15,
-            'page'              => $request['page'] ?? 1,
+            'paged'              => $request['page'],
             's'                 => $request['search']
         ];
 //        $args['tax_query'] = [

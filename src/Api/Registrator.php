@@ -67,9 +67,10 @@ class Registrator extends WP_REST_Controller {
             'callback'      => array( SearchEndpoints::class, 'getFilters' )
         ) );
 
-        register_rest_route( $this->eucapacito_namespace, "/page/(?P<id>\d+)", array(
+        // PAGES ENDPOINTS
+        register_rest_route( $this->eucapacito_namespace, "/aboutpage", array(
             'methods'       => WP_REST_Server::READABLE,
-            'callback'      => array( $this, 'getPage' )
+            'callback'      => array( PageEndpoints::class, 'getAboutPage' )
         ) );
 	}
 
@@ -93,12 +94,6 @@ class Registrator extends WP_REST_Controller {
         echo get_post_meta( 10429, 'responsavel')[0]['guid'];
     }
 
-    public function getPage( $request )
-    {
-        $pageId = $request['id'];
-        $content = get_post_meta($pageId, 'gdlr-core-page-builder');
-        echo $content;
-
-    }
+    
 
 }
