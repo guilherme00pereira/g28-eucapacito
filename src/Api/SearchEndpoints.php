@@ -46,7 +46,6 @@ class SearchEndpoints
             }
         }
         $query = new WP_Query( $args );
-        Logger::getInstance()->add($query->have_posts());
         while ($query->have_posts()) {
             $query->the_post();
             $postId = get_the_ID();

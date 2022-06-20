@@ -19,7 +19,7 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
         include sprintf( "%sbanners-home.php", Plugin::getTemplateDir() );
         break;
     default:
-        include sprintf( "%smessage-settings.php", Plugin::getTemplateDir() );
+        include sprintf( "%smessages.php", Plugin::getTemplateDir() );
         break;
     endswitch; 
         ?>
