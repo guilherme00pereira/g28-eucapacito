@@ -10,6 +10,7 @@ class OptionsManager
     const HAVE_MAIL                     = 'have_mail';
     const INVALID_MAIL                  = 'invalid_mail';
     const DONT_HAVE_MAIL                = 'dont_have_mail';
+    const MAIL_MESSAGE                  = 'mail_message';
     const UPDATE_PROFILE_ERROR          = 'update_profile_error';
     const UPDATE_PROFILE_SUCCESS        = 'update_profile_success';
     const PASSWORD_SEND_MAIL            = 'pwd_send_mail';
@@ -88,16 +89,6 @@ class OptionsManager
             ]
         );
         add_settings_field(
-            self::PASSWORD_SEND_MAIL,
-            'Recuperação de e-mail: envio da senha',
-            [ $this, 'input_text_cb'],
-            self::OPTIONS_NAME,
-            'user_profile_section',
-            [
-                'name'  => self::PASSWORD_SEND_MAIL
-            ]
-        );
-        add_settings_field(
             self::PASSWORD_INVALID,
             'Senha inválida',
             [ $this, 'input_text_cb'],
@@ -115,6 +106,26 @@ class OptionsManager
             'user_profile_section',
             [
                 'name'  => self::PASSWORD_SUCCESS
+            ]
+        );
+        add_settings_field(
+            self::PASSWORD_SEND_MAIL,
+            'Recuperação de senha: envio e-mail',
+            [ $this, 'input_text_cb'],
+            self::OPTIONS_NAME,
+            'user_profile_section',
+            [
+                'name'  => self::PASSWORD_SEND_MAIL
+            ]
+        );
+        add_settings_field(
+            self::MAIL_MESSAGE,
+            'Recuperação: Mensagem de e-mail',
+            [ $this, 'input_text_cb'],
+            self::OPTIONS_NAME,
+            'user_profile_section',
+            [
+                'name'  => self::MAIL_MESSAGE
             ]
         );
 

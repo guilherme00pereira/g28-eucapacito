@@ -66,7 +66,7 @@ class Registrator extends WP_REST_Controller {
         // PAGES ENDPOINTS
         register_rest_route( $this->eucapacito_namespace, "/aboutpage", array(
             'methods'       => WP_REST_Server::READABLE,
-            'callback'      => array( PageEndpoints::class, 'getAboutPage' )
+            'callback'      => array( PageEndpoints::getInstance(), 'getAboutPage' )
         ) );
 	}
 
