@@ -29,10 +29,12 @@ class SearchEndpoints
         $args = [
             'post_type'         => 'curso_ec',
             'posts_per_page'    => 15,
-            'paged'             => $request['page'],
-            's'                 => $request['search']
+            'paged'             => $request['page']
         ];
-        if($request['t']) {
+        if( $request['search'] && !empty( $request['search'] ) ) {
+            $args['s'] = $request['search'];
+        }
+        if( $request['t'] ) {
             $filteredTerms = explode(',', $request['t']);
             $args['tax_query'] = [ 'relation' => 'OR' ];
             foreach( $this->taxonomies as $taxonomy ) {
@@ -54,6 +56,7 @@ class SearchEndpoints
                 'id'                => $postId,
                 'slug'              => basename(get_permalink($postId)),
                 'title'             => $query->post->post_title,
+                'image'             => wp_get_attachment_image_src(get_post_thumbnail_id($postId), "medium")[0],
                 'type'              => 'curso_ec',
                 'logo'              => get_post_meta( $postId, 'responsavel')[0]['guid'],
                 'terms'             => array_column($terms, 'term_id')
