@@ -6,7 +6,7 @@ use G28\Eucapacito\Api\PartnersEndpoints;
 use G28\Eucapacito\Api\UserEndpoints;
 use G28\Eucapacito\Core\CustomPostTypes;
 use G28\Eucapacito\Core\Plugin;
-use G28\Eucapacito\Api\Registrator;
+use G28\Eucapacito\Api\EndpointRegistrator;
 use G28\Eucapacito\Core\Controller;
 use G28\Eucapacito\Core\OptionsManager;
 
@@ -30,7 +30,7 @@ class Startup {
 			new OptionsManager();
 		} );
         add_action( 'rest_api_init', function (){
-			new Registrator();
+			new EndpointRegistrator();
 		});
 		add_action( 'admin_init', function() {
 			$subscriber = get_role('subscriber');

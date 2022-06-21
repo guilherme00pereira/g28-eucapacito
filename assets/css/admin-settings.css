@@ -14,6 +14,7 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+    flex-wrap: wrap;
     margin-top: 30px;
     padding-top: 30px;
     border-top: 1px solid #BBB;
@@ -31,5 +32,10 @@
 
 .eucap-banner-box div {
     padding: 5px 0;
-    
-}}
+}
+
+#messageBanner {
+    padding: 20px;
+    margin-top: 30px;
+    display: none;
+}

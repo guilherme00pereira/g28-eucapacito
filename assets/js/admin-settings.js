@@ -4,9 +4,6 @@
 		$('#eucap-banner-list').sortable({
 			placeholder: "ui-state-highlight",
 			cursor: 'move',
-			change: function(e, ui) {
-				$('#btnSaveBanners').show();
-			}
 		  });
 		//imageList.disableSelection();
 	})	
@@ -23,14 +20,15 @@
 			},
 			multiple: false
 		}).on('select', function() {
-			$('#btnSaveBanners').show();
 			const attachment = custom_uploader.state().get('selection').first().toJSON();
+			console.log(typeof attachment.sizes.medium == 'undefined');
+			const imagem = typeof attachment.sizes.medium == 'undefined' ? attachment.sizes.thumbnail.url : attachment.sizes.medium.url;
 			imageList.append(`
 				<li class="eucap-banner-box" data-id="${attachment.id}">
 					<div>
 						<button type="button" class="button button-danger exclude-btn">X</button>
 					<div>
-						<img src="${attachment.sizes.medium.url}">
+						<img src="${imagem}" />
 					</div>
 					<div>
 						<label for="banner-link-${attachment.id}">Link: </label>
@@ -50,11 +48,12 @@
     });
 
 	$(document).on('click', '.exclude-btn', function (e) {
-
+		$(this).parents('.eucap-banner-box').remove();
 	});
 
 	$(document).on('click', '#btnSaveBanners', function (e) {
 		$('#loadingBanners').show();
+		$('#messageBanner').hide();
 		let banners = [];
 		$('#eucap-banner-list').children().each(function() {
 			const id = $(this).data('id');
@@ -71,7 +70,15 @@
 		}
 		$.post(ajaxobj.ajax_url, params, function(res){
 			console.log(res)
+			const div = $('#messageBanner');
+			div.show().removeClass();
 			$('#loadingBanners').hide();
+			if(res.success) {
+				div.addClass('notice notice-success notice-alt')
+			} else {
+				div.addClass('notice notice-error notice-alt')
+			}
+			div.html(res.message)
 		}, 'json');
 	});
 

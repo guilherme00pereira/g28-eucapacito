@@ -7,7 +7,7 @@ use WP_REST_Controller;
 use WP_REST_Response;
 use WP_REST_Server;
 
-class Registrator extends WP_REST_Controller {
+class EndpointRegistrator extends WP_REST_Controller {
 
     protected string $jwt;
     protected string $eucapacito_namespace;
@@ -67,6 +67,12 @@ class Registrator extends WP_REST_Controller {
         register_rest_route( $this->eucapacito_namespace, "/aboutpage", array(
             'methods'       => WP_REST_Server::READABLE,
             'callback'      => array( PageEndpoints::getInstance(), 'getAboutPage' )
+        ) );
+
+        // MEDIA ENDPOINTS
+        register_rest_route( $this->eucapacito_namespace, "/banners", array(
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( MediaEndpoints::getInstance(), 'getBanners' )
         ) );
 	}
 

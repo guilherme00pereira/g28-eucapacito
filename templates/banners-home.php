@@ -2,6 +2,11 @@
 
 use G28\Eucapacito\Core\OptionsManager;
 
+/**
+ * @var array $banners
+ */
+
+
 ?>
 <div class="eucap-banner-wrapper">
     <div>
@@ -35,5 +40,5 @@ use G28\Eucapacito\Core\OptionsManager;
             <img src="<?php echo esc_url( get_admin_url() . 'images/spinner.gif' ); ?>" />
         </span>
     </div>
-    <div id="message"></div>
+    <div id="messageBanner"></div>
 </div>
