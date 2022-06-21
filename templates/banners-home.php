@@ -3,46 +3,37 @@
 use G28\Eucapacito\Core\OptionsManager;
 
 ?>
-<div class="eucap-banner-box">
+<div class="eucap-banner-wrapper">
     <div>
-        <button id="eucap_btn_upload" type="button button-primary" class="button action">Adicionar novo banner</button>
+        <button id="eucap_btn_upload" type="button" class="button button-primary button-hero">Adicionar novo banner</button>
     </div>
-    <div id="eucap-banner-list" class="eucap-banners">
-        <div class="eucap-banner-box">
-            <div>
-                <img src="https://eucapacito.local/wp-content/uploads/2022/06/atualizacoes-300x124.png">
-            </div>
-            <div>
-                <label for="">
-                    <input id="banner-link-1" type="text" />
-            </div>
-            <div>
-                <select>
-                    <option value="desktop">Desktop</option>
-                    <option value="mobile">Mobile</option>
-                </select>
-            </div>
-            <div>
-                <button type="button" class="button action">Salvar</button>
-            </div>
-        </div>
-        <div class="eucap-banner-box">
-            <div>
-                <img src="https://eucapacito.local/wp-content/uploads/2022/06/atualizacoes-300x124.png">
-            </div>
-            <div>
-                <label for="">
-                    <input id="banner-link-1" type="text" />
-            </div>
-            <div>
-                <select>
-                    <option value="desktop">Desktop</option>
-                    <option value="mobile">Mobile</option>
-                </select>
-            </div>
-            <div>
-                <button type="button" class="button action">Salvar</button>
-            </div>
-        </div>
+    <ul id="eucap-banner-list" class="eucap-banners">
+        <?php foreach($banners as $banner) { ?>
+            <li class="eucap-banner-box" data-id="<?= $banner['id'] ?>">
+					<div>
+						<button type="button" class="button button-danger exclude-btn">X</button>
+					<div>
+						<img src="<?= $banner['image'] ?>">
+					</div>
+					<div>
+						<label for="banner-link-<?= $banner['id'] ?>">Link: </label>
+						<input id="banner-link-<?= $banner['id'] ?>" type="text" value="<?= $banner['link'] ?>" />
+					</div>
+					<div>
+						<label for="banner-device-<?= $banner['id'] ?>">Exibir: </label>
+						<select id="banner-device-<?= $banner['id'] ?>" name="banner-device-<?= $banner['id'] ?>">
+							<option value="desktop" <?= $banner['device'] === 'desktop' ? 'selected' : ''  ?>>Desktop</option>
+							<option value="mobile" <?= $banner['device'] === 'mobile' ? 'selected' : ''  ?>>Mobile</option>
+						</select>
+					</div>
+				</li>
+        <?php } ?>
+    </ul>
+    <div>
+        <button id="btnSaveBanners" type="button" class="button button-primary">Salvar alterações</button>
+        <span id="loadingBanners" style="display: none;">
+            <img src="<?php echo esc_url( get_admin_url() . 'images/spinner.gif' ); ?>" />
+        </span>
     </div>
+    <div id="message"></div>
 </div>

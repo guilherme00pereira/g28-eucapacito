@@ -1,11 +1,22 @@
-.eucap-banner-box {
+.button-danger {
+    color: #b12229 !important;
+    border-color: #b12229 !important;
+    background: #f6f7f7 !important;
+    float: right;
+}
+
+.eucap-banner-wrapper {
     margin: 2.5em;
 }
 
 .eucap-banners {
+    list-style-type: none;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: flex-start;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #BBB;
 }
 
 .eucap-banner-box {
@@ -13,8 +24,12 @@
     flex-direction: column;
     justify-content: space-evenly;
     align-items: flex-start;
+    padding: 5px 20px;
+    margin: 10px;
+    border: 1px dotted #BBB;
 }
 
 .eucap-banner-box div {
     padding: 5px 0;
-}
+    
+}}

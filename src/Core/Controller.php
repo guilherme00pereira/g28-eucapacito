@@ -2,6 +2,8 @@
 
 namespace G28\Eucapacito\Core;
 
+use Exception;
+use G28\Eucapacito\Options\BannerOptions;
 
 class Controller {
 
@@ -9,6 +11,7 @@ class Controller {
 	{
 		add_action('admin_menu', array($this, 'addMenuPage' ));
 		add_action( 'admin_enqueue_scripts', [ $this, 'registerStylesAndScripts'] );
+		add_action( 'wp_ajax_ajaxAddBanner', [ $this, 'ajaxAddBanner' ] );
 	}
 
     public function addMenuPage()
@@ -40,16 +43,38 @@ class Controller {
 		
 	}
 
+	public function ajaxAddBanner()
+	{
+		try {
+		wp_verify_nonce( 'eucap_nonce' );
+		$bannerList = [];
+		$banners	= json_decode( stripslashes( $_POST['banners'] ) );
+		foreach( $banners as $banner ) {
+			array_push($bannerList, $banner);
+		}
+		update_option( BannerOptions::HOME_BANNERS_OPTION, $bannerList );
+		echo ['success' => true, 'message' => 'Banners atualizados com sucesso!'];
+	} catch (Exception $e) {
+		echo ['success' => false, 'message' => 'Erro ao salvar bannners.'];
+	}
+		wp_die();
+	}
+
 	public function registerStylesAndScripts()
 	{
 		wp_register_style( Plugin::getAssetsPrefix() . 'admin_style', Plugin::getAssetsUrl() . 'css/admin-settings.css' );
 		wp_register_script(
             Plugin::getAssetsPrefix() . 'admin-scripts',
             Plugin::getAssetsUrl() . 'js/admin-settings.js',
-            array( 'jquery' ),
+            array( 'jquery', 'jquery-ui-sortable' ),
             null,
             true
         );
+		wp_localize_script( Plugin::getAssetsPrefix() . 'admin-scripts', 'ajaxobj', [
+			'ajax_url'        	=> admin_url( 'admin-ajax.php' ),
+			'eucap_nonce'		=> wp_create_nonce( 'eucap_nonce' ),
+			'action_saveBanner'	=> 'ajaxAddBanner'
+		]);
 	}
 
 }

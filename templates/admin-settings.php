@@ -1,6 +1,7 @@
 <?php
 
 use G28\Eucapacito\Core\Plugin;
+use G28\Eucapacito\Options\BannerOptions;
 
 $default_tab = null;
 $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
@@ -20,6 +21,7 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
         include sprintf( "%sapp-settings.php", Plugin::getTemplateDir() );
         break;
     case 'banners-home':
+        $banners = BannerOptions::getBanners();
         include sprintf( "%sbanners-home.php", Plugin::getTemplateDir() );
         break;
     default:
