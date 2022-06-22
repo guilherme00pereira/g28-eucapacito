@@ -5,5 +5,7 @@
             "G28\\Eucapacito\\": "src/"
         }
     },
-    "require": {}
+    "require": {
+        "guzzlehttp/guzzle": "^7.4"
+    }
 }
