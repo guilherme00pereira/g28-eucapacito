@@ -2,6 +2,7 @@
 
 namespace G28\Eucapacito\Api;
 
+use G28\Eucapacito\Api\Clients\RDStation;
 use G28\Eucapacito\Models\User;
 use WP_REST_Controller;
 use WP_REST_Response;
@@ -74,6 +75,12 @@ class EndpointRegistrator extends WP_REST_Controller {
             'methods'       => WP_REST_Server::READABLE,
             'callback'      => array( MediaEndpoints::getInstance(), 'getBanners' )
         ) );
+
+        //RD STATION
+        register_rest_route( $this->eucapacito_namespace, "/rdstation_cb", array(
+            'methods'       => WP_REST_Server::EDITABLE,
+            'callback'      => array( RDStation::class, 'authCallback' )
+        ) );
 	}
 
     public function addFieldsToApi()
@@ -84,8 +91,38 @@ class EndpointRegistrator extends WP_REST_Controller {
             $response->data[ 'avatar' ]     = wp_get_attachment_image_url( $meta[0] );
             return $response;
         }, 10, 3 );
+
         add_filter( 'rest_prepare_curso_ec', function( $response, $post, $request ) {
             $response->data[ 'duration' ] = get_post_meta($post->ID, '_learndash_course_grid_duration');
+            return $response;
+        }, 10, 3 );
+
+        add_filter( 'rest_prepare_bolsa_de_estudo', function( $response, $post, $request ) {
+            $cursos = $response->data[ 'cursos_ec' ];
+            $newCursos = [];
+            foreach($cursos as $curso)
+            {
+                $post = get_post($curso['ID']);
+                $curso['title'] = $post->post_title;
+                $curso['image'] = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0];
+                $curso['responsavel'] = $curso['responsavel']['guid'];
+                array_push($newCursos, $curso);
+            }
+            $response->data[ 'cursos_ec' ] = $newCursos;
+            return $response;
+        }, 10, 3 );
+
+        add_filter( 'rest_prepare_empregabilidade', function( $response, $post, $request ) {
+            $cursos = $response->data[ 'cursos_ec' ];
+            $newCursos = [];
+            foreach($cursos as $curso)
+            {
+                $post = get_post($curso['ID']);
+                $curso['title'] = $post->post_title;
+                $curso['image'] = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0];
+                array_push($newCursos, $curso);
+            }
+            $response->data[ 'cursos_ec' ] = $newCursos;
             return $response;
         }, 10, 3 );
     }

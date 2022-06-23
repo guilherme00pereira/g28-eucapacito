@@ -24,7 +24,7 @@ class PageEndpoints
     {
         $elements   = [];
         $html       = "<div>";
-        $aboutPage  = get_post(13125);//macos: 13125 - trt: 13076 - site: 13315
+        $aboutPage  = get_post(13315);//macos: 13125 - trt: 13076 - site: 13315
         $blocks     = parse_blocks($aboutPage->post_content);
         foreach ( $blocks as $block ){
             $html .= render_block($block);

@@ -5,6 +5,9 @@
             "G28\\Eucapacito\\": "src/"
         }
     },
+    "config": {
+        "platform-check": false
+    },
     "require": {
         "guzzlehttp/guzzle": "^7.4"
     }
