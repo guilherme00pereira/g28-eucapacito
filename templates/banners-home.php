@@ -14,19 +14,19 @@ use G28\Eucapacito\Core\OptionsManager;
     </div>
     <ul id="eucap-banner-list" class="eucap-banners">
         <?php foreach($banners as $banner) { ?>
-            <li class="eucap-banner-box" data-id="<?= $banner['id'] ?>">
+            <li class="eucap-banner-box" data-id="<?= $banner['id'] ?>" data-hash="<?= $banner['hash'] ?>">
 					<div>
 						<button type="button" class="button button-danger exclude-btn">X</button>
 					<div>
 						<img src="<?= $banner['image'] ?>">
 					</div>
 					<div>
-						<label for="banner-link-<?= $banner['id'] ?>">Link: </label>
-						<input id="banner-link-<?= $banner['id'] ?>" type="text" value="<?= $banner['link'] ?>" />
+						<label for="banner-link-<?= $banner['hash'] ?>">Link: </label>
+						<input id="banner-link-<?= $banner['hash'] ?>" type="text" value="<?= $banner['link'] ?>" />
 					</div>
 					<div>
-						<label for="banner-device-<?= $banner['id'] ?>">Exibir: </label>
-						<select id="banner-device-<?= $banner['id'] ?>" name="banner-device-<?= $banner['id'] ?>">
+						<label for="banner-device-<?= $banner['hash'] ?>">Exibir: </label>
+						<select id="banner-device-<?= $banner['hash'] ?>" name="banner-device-<?= $banner['hash'] ?>">
 							<option value="desktop" <?= $banner['device'] === 'desktop' ? 'selected' : ''  ?>>Desktop</option>
 							<option value="mobile" <?= $banner['device'] === 'mobile' ? 'selected' : ''  ?>>Mobile</option>
 						</select>

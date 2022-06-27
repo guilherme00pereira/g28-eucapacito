@@ -9,6 +9,7 @@ class CustomPostTypes
         add_action( 'init', [ $this, 'registerPartnersCategoryTaxonomy']);
         add_action( 'init', [ $this, 'registerPartnersPostType'] );
         add_filter( 'register_post_type_args', [ $this, 'registerPartnersPostTypeArgs' ], 10, 2 );
+        add_post_type_support( 'jornada', 'thumbnail' );
     }
 
     public function registerPartnersPostType()

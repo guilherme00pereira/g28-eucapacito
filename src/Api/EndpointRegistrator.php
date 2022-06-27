@@ -77,10 +77,14 @@ class EndpointRegistrator extends WP_REST_Controller {
         ) );
 
         //RD STATION
-        register_rest_route( $this->eucapacito_namespace, "/rdstation_cb", array(
-            'methods'       => WP_REST_Server::EDITABLE,
-            'callback'      => array( RDStation::class, 'authCallback' )
-        ) );
+//        register_rest_route( $this->eucapacito_namespace, "/rdstation_lead", array(
+//            'methods'       => WP_REST_Server::EDITABLE,
+//            'callback'      => array( IntegrationEndpoints::class, 'registerRDStationLead' )
+//        ) );
+//        register_rest_route( $this->eucapacito_namespace, "/rdstation_cb", array(
+//            'methods'       => WP_REST_Server::EDITABLE,
+//            'callback'      => array( IntegrationEndpoints::class, 'authCallback' )
+//        ) );
 	}
 
     public function addFieldsToApi()
@@ -94,6 +98,22 @@ class EndpointRegistrator extends WP_REST_Controller {
 
         add_filter( 'rest_prepare_curso_ec', function( $response, $post, $request ) {
             $response->data[ 'duration' ] = get_post_meta($post->ID, '_learndash_course_grid_duration');
+            return $response;
+        }, 10, 3 );
+
+        add_filter( 'rest_prepare_jornada', function( $response, $post, $request ) {
+            $response->data[ 'image' ] = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0];
+            $cursos = $response->data[ 'cursos_ec' ];
+            $newCursos = [];
+            foreach($cursos as $curso)
+            {
+                $post = get_post($curso['ID']);
+                $curso['title'] = $post->post_title;
+                $curso['image'] = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0];
+                $curso['post_content'] = "";
+                array_push($newCursos, $curso);
+            }
+            $response->data[ 'cursos_ec' ] = $newCursos;
             return $response;
         }, 10, 3 );
 
@@ -130,11 +150,11 @@ class EndpointRegistrator extends WP_REST_Controller {
     public function ping( $request )
     {
         //echo get_user_meta( 52351, 'avatar_id' )[0] . PHP_EOL . wp_get_attachment_image_url( 13076 );
-        //echo get_post_meta( 10429, 'responsavel')[0]['guid'];
-        $t = SearchEndpoints::getInstance()->getTaxonomies();
-        $tr = wp_get_post_terms( 10429, $t );
-        $res = array_column($tr, 'term_id');
-        echo array_intersect([232], $res)[0];
+        echo wp_get_attachment_image_src( get_post_meta( 10429, 'responsavel')[0] )[0];
+//        $t = SearchEndpoints::getInstance()->getTaxonomies();
+//        $tr = wp_get_post_terms( 10429, $t );
+//        $res = array_column($tr, 'term_id');
+//        echo array_intersect([232], $res)[0];
     }
 
     

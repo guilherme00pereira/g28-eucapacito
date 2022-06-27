@@ -13,14 +13,32 @@ class BannerOptions
         if($items) {
             foreach ($items as $item) {
                 $banner = [
-                    'id' => $item->id,
-                    'image' => wp_get_attachment_image_src($item->id, $size)[0],
-                    'link' => $item->link,
-                    'device' => $item->device
+                    'id'        => $item['id'],
+                    'hash'      => $item['hash'],
+                    'image'     => wp_get_attachment_image_src($item['id'], $size)[0],
+                    'link'      => $item['link'],
+                    'device'    => $item['device']
                 ];
                 $banners[] = $banner;
             }
         }
         return $banners;
+    }
+
+    public static function saveBanners( $items )
+    {
+        $banners = [];
+        if($items) {
+            foreach ($items as $item) {
+                $banner = [
+                    'hash'      => hash('crc32', rand(0,9999) . time()),
+                    'id'        => $item->id,
+                    'link'      => $item->link,
+                    'device'    => $item->device
+                ];
+                $banners[] = $banner;
+            }
+        }
+        update_option( self::HOME_BANNERS_OPTION, $banners );
     }
 }

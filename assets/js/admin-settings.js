@@ -59,8 +59,8 @@
 			const id = $(this).data('id');
 			banners.push({
 				id: id,
-				link: $('#banner-link-' + id).val(),
-				device: $('#banner-device-' + id).val(),
+				link: $('#banner-link-' + hash).val(),
+				device: $('#banner-device-' + hash).val(),
 			});
 		})
 		let params = {
@@ -69,7 +69,6 @@
 			banners: JSON.stringify(banners)
 		}
 		$.post(ajaxobj.ajax_url, params, function(res){
-			console.log(res)
 			const div = $('#messageBanner');
 			div.show().removeClass();
 			$('#loadingBanners').hide();
@@ -78,7 +77,8 @@
 			} else {
 				div.addClass('notice notice-error notice-alt')
 			}
-			div.html(res.message)
+			div.html(res.message);
+
 		}, 'json');
 	});
 

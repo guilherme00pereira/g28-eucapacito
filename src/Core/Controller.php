@@ -47,10 +47,8 @@ class Controller {
 	{
 		try {
             wp_verify_nonce( 'eucap_nonce' );
-            $bannerList = [];
             $banners	= json_decode( stripslashes( $_POST['banners'] ) );
-            foreach( $banners as $banner ) $bannerList[] = $banner;
-            update_option( BannerOptions::HOME_BANNERS_OPTION, $bannerList );
+            BannerOptions::saveBanners( $banners );
             echo json_encode(['success' => true, 'message' => 'Banners atualizados com sucesso!']);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'message' => 'Erro ao salvar bannners.']);

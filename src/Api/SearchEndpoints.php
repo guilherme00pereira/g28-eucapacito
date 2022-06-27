@@ -51,14 +51,15 @@ class SearchEndpoints
         while ($query->have_posts()) {
             $query->the_post();
             $postId = get_the_ID();
+
             $terms = wp_get_post_terms( $postId, $this->getTaxonomies());
             $courses[] = [
                 'id'                => $postId,
                 'slug'              => basename(get_permalink($postId)),
                 'title'             => $query->post->post_title,
-                'image'             => wp_get_attachment_image_src(get_post_thumbnail_id($postId), "medium")[0],
+                'image'             => wp_get_attachment_image_src( get_post_thumbnail_id($postId), "medium")[0],
                 'type'              => 'curso_ec',
-                'logo'              => get_post_meta( $postId, 'responsavel')[0]['guid'],
+                'logo'              => wp_get_attachment_image_src( get_post_meta( $postId, 'responsavel')[0], "full")[0],
                 'terms'             => array_column($terms, 'term_id')
             ];
         }
