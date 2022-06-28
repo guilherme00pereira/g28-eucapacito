@@ -24,7 +24,7 @@
 			console.log(typeof attachment.sizes.medium == 'undefined');
 			const imagem = typeof attachment.sizes.medium == 'undefined' ? attachment.sizes.thumbnail.url : attachment.sizes.medium.url;
 			imageList.append(`
-				<li class="eucap-banner-box" data-id="${attachment.id}">
+				<li class="eucap-banner-box" data-id="${attachment.id}" data-hash="${attachment.id}">
 					<div>
 						<button type="button" class="button button-danger exclude-btn">X</button>
 					<div>
@@ -57,6 +57,7 @@
 		let banners = [];
 		$('#eucap-banner-list').children().each(function() {
 			const id = $(this).data('id');
+			const hash = $(this).data('hash');
 			banners.push({
 				id: id,
 				link: $('#banner-link-' + hash).val(),
