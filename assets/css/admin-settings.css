@@ -2,8 +2,14 @@
     color: #b12229 !important;
     border-color: #b12229 !important;
     background: #f6f7f7 !important;
-    float: right;
 }
+
+.eucap-button-success {
+    background-color: #639c1e !important;
+    border-color: #639c1e !important;
+    color: white !important;
+}
+
 
 .eucap-banner-wrapper {
     margin: 2.5em;
@@ -23,11 +29,20 @@
 .eucap-banner-box {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     align-items: flex-start;
     padding: 5px 20px;
     margin: 10px;
     border: 1px dotted #BBB;
+}
+
+
+.eucap-banner-box div:first-child {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .eucap-banner-box div {

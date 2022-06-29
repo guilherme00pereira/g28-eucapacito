@@ -15,9 +15,10 @@ class BannerOptions
                 $banner = [
                     'id'        => $item['id'],
                     'hash'      => $item['hash'],
-                    'image'     => wp_get_attachment_image_src($item['id'], $size)[0],
+                    'image'     => self::getBannerMediaUrl($item['id'], $size, $item['type'], $item['link']),
                     'link'      => $item['link'],
-                    'device'    => $item['device']
+                    'device'    => $item['device'],
+                    'type'      => $item['type']
                 ];
                 $banners[] = $banner;
             }
@@ -34,11 +35,25 @@ class BannerOptions
                     'hash'      => hash('crc32', rand(0,9999) . time()),
                     'id'        => $item->id,
                     'link'      => $item->link,
-                    'device'    => $item->device
+                    'device'    => $item->device,
+                    'type'      => $item->type
                 ];
                 $banners[] = $banner;
             }
         }
         update_option( self::HOME_BANNERS_OPTION, $banners );
+    }
+
+    private static function getBannerMediaUrl( $id, $size, $type, $link )
+    {
+        if( $type === "video" )
+        {
+            if(strpos($link, "youtube")) {
+                parse_str( parse_url( $link, PHP_URL_QUERY ), $vars );
+                return "https://img.youtube.com/vi/" . $vars['v'] . "/default.jpg";
+            }
+            //https://img.youtube.com/vi/<insert-youtube-video-id-here>/default.jpg
+        }
+        return wp_get_attachment_image_src($id, $size)[0];
     }
 }

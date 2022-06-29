@@ -5,11 +5,10 @@
 			placeholder: "ui-state-highlight",
 			cursor: 'move',
 		  });
-		//imageList.disableSelection();
 	})	
 
-    $(document).on('click', '#eucap_btn_upload', function (e) {
-        const imageList = $('#eucap-banner-list');
+    $(document).on('click', '#eucap_btn_image_upload', function (e) {
+        const mediaList = $('#eucap-banner-list');
 		custom_uploader = wp.media({
 			title: 'Inserir banner',
 			library : {
@@ -21,10 +20,9 @@
 			multiple: false
 		}).on('select', function() {
 			const attachment = custom_uploader.state().get('selection').first().toJSON();
-			console.log(typeof attachment.sizes.medium == 'undefined');
 			const imagem = typeof attachment.sizes.medium == 'undefined' ? attachment.sizes.thumbnail.url : attachment.sizes.medium.url;
-			imageList.append(`
-				<li class="eucap-banner-box" data-id="${attachment.id}" data-hash="${attachment.id}">
+			mediaList.append(`
+				<li class="eucap-banner-box" data-id="${attachment.id}" data-hash="${attachment.id}" data-type="image">
 					<div>
 						<button type="button" class="button button-danger exclude-btn">X</button>
 					<div>
@@ -47,6 +45,28 @@
 		}).open();
     });
 
+	$(document).on('click', '#eucap_btn_video_upload', function (e) {
+        const mediaList = $('#eucap-banner-list');
+		const id = mediaList.size() + 1;
+		mediaList.append(`
+			<li class="eucap-banner-box" data-id="${id}" data-hash="${id}" data-type="video">
+				<div>
+					<button type="button" class="button button-danger exclude-btn">X</button>
+				<div>
+					<label for="banner-link-${id}">Vídeo URL: </label>
+					<input id="banner-link-${id}" type="text" />
+				</div>
+				<div>
+					<label for="banner-device-${id}">Exibir: </label>
+					<select id="banner-device-${id}" name="banner-device-${id}">
+						<option value="desktop">Desktop</option>
+						<option value="mobile">Mobile</option>
+					</select>
+				</div>
+			</li>
+		`);
+    });
+
 	$(document).on('click', '.exclude-btn', function (e) {
 		$(this).parents('.eucap-banner-box').remove();
 	});
@@ -58,10 +78,12 @@
 		$('#eucap-banner-list').children().each(function() {
 			const id = $(this).data('id');
 			const hash = $(this).data('hash');
+			const type = $(this).data('type');
 			banners.push({
 				id: id,
 				link: $('#banner-link-' + hash).val(),
 				device: $('#banner-device-' + hash).val(),
+				type: type
 			});
 		})
 		let params = {
