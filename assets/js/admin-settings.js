@@ -52,6 +52,7 @@
 			<li class="eucap-banner-box" data-id="${id}" data-hash="${id}" data-type="video">
 				<div>
 					<button type="button" class="button button-danger exclude-btn">X</button>
+				</div>
 				<div>
 					<label for="banner-link-${id}">Vídeo URL: </label>
 					<input id="banner-link-${id}" type="text" />

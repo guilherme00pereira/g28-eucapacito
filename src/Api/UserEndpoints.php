@@ -2,9 +2,8 @@
 
 namespace G28\Eucapacito\Api;
 
-use G28\Eucapacito\Core\Logger;
-use G28\Eucapacito\Core\OptionsManager;
 use G28\Eucapacito\Models\User;
+use G28\Eucapacito\Options\MessageOptions;
 use WP_REST_Response;
 
 class UserEndpoints
@@ -12,7 +11,7 @@ class UserEndpoints
 
     public function __construct()
     {
-        $this->options = get_option(OptionsManager::OPTIONS_NAME);
+        $this->options = get_option(MessageOptions::OPTIONS_NAME);
     }
 
     public function registerUser( $request ): WP_REST_Response
@@ -50,19 +49,20 @@ class UserEndpoints
     {
         if (is_email($request['email'])) {
             if (!email_exists($request['email'])) {
-                return new WP_REST_Response($this->options[OptionsManager::DONT_HAVE_MAIL], 500);
+                return new WP_REST_Response($this->options[MessageOptions::DONT_HAVE_MAIL], 500);
             } else {
                 $user       = new User();
                 $newPwd     = $user->setUserByEmail( $request['email'] )->generateNewPassword();
+                $message    = get_option(MessageOptions::OPTIONS_NAME)[MessageOptions::MAIL_MESSAGE];
                 wp_mail(
                     $request['email'],
                     "Eu Capacito - Recuperação de senha",
-                    "Sua nova senha: ${newPwd}"
+                    $message . " " . $newPwd
                 );
-                return new WP_REST_Response( $this->options[OptionsManager::PASSWORD_SEND_MAIL] , 200 );
+                return new WP_REST_Response( $this->options[MessageOptions::PASSWORD_SEND_MAIL] , 200 );
             }
         } else {
-            return new WP_REST_Response($this->options[OptionsManager::INVALID_MAIL], 500);
+            return new WP_REST_Response($this->options[MessageOptions::INVALID_MAIL], 500);
         }
     }
 
@@ -75,9 +75,9 @@ class UserEndpoints
         $hash = $user->data->user_pass;
         if( wp_check_password( $old, $hash ) ){
             wp_set_password( $new, $user_id );
-            return new WP_REST_Response( $this->options[OptionsManager::PASSWORD_SUCCESS] , 200 );
+            return new WP_REST_Response( $this->options[MessageOptions::PASSWORD_SUCCESS] , 200 );
         }else {
-            return new WP_REST_Response($this->options[OptionsManager::PASSWORD_INVALID], 500);
+            return new WP_REST_Response($this->options[MessageOptions::PASSWORD_INVALID], 500);
         }
     }
 

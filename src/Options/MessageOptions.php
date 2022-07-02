@@ -1,8 +1,8 @@
 <?php
 
-namespace G28\Eucapacito\Core;
+namespace G28\Eucapacito\Options;
 
-class OptionsManager
+class MessageOptions
 {
     const OPTIONS_NAME                  = 'eucapacito-webapp';
     const OPTIONS_GROUP                 = 'message_group';
@@ -16,7 +16,12 @@ class OptionsManager
     const PASSWORD_SEND_MAIL            = 'pwd_send_mail';
     const PASSWORD_INVALID              = 'pwd_invalid';
     const PASSWORD_SUCCESS              = 'pwd_success';
-    
+
+    /**
+     * @var false|mixed|void
+     */
+    private $options;
+
 
     public function __construct()
     {
@@ -121,12 +126,9 @@ class OptionsManager
         add_settings_field(
             self::MAIL_MESSAGE,
             'Recuperação: Mensagem de e-mail',
-            [ $this, 'input_text_cb'],
+            [ $this, 'textarea_cb'],
             self::OPTIONS_NAME,
             'user_profile_section',
-            [
-                'name'  => self::MAIL_MESSAGE
-            ]
         );
 
     }
@@ -139,7 +141,14 @@ class OptionsManager
         <?php
     }
 
-
+    public function textarea_cb()
+    {
+        ?>
+            <textarea id='plugin_textarea_string' name='<?= self::OPTIONS_NAME ?>[<?= self::MAIL_MESSAGE ?>]' rows='7' cols='50' type='textarea'>
+                <?= $this->options[self::MAIL_MESSAGE] ?? ''  ?>
+            </textarea>
+        <?php
+    }
 
 
 }

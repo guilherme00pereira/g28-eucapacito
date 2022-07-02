@@ -2,13 +2,11 @@
 
 namespace G28\Eucapacito;
 
-use G28\Eucapacito\Api\PartnersEndpoints;
-use G28\Eucapacito\Api\UserEndpoints;
 use G28\Eucapacito\Core\CustomPostTypes;
 use G28\Eucapacito\Core\Plugin;
 use G28\Eucapacito\Api\EndpointRegistrator;
 use G28\Eucapacito\Core\Controller;
-use G28\Eucapacito\Core\OptionsManager;
+use G28\Eucapacito\Options\MessageOptions;
 
 class Startup {
 
@@ -27,7 +25,7 @@ class Startup {
 			Plugin::getInstance($root);
 			new Controller();
             new CustomPostTypes();
-			new OptionsManager();
+			new MessageOptions();
 		} );
         add_action( 'rest_api_init', function (){
 			new EndpointRegistrator();

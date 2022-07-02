@@ -4,6 +4,7 @@ namespace G28\Eucapacito\Core;
 
 use Exception;
 use G28\Eucapacito\Options\BannerOptions;
+use G28\Eucapacito\Options\MessageOptions;
 
 class Controller {
 
@@ -20,7 +21,7 @@ class Controller {
 			'Eu Capacito WebApp',
 			'Eu Capacito WebApp',
 			'manage_options',
-			OptionsManager::OPTIONS_NAME,
+			MessageOptions::OPTIONS_NAME,
 			array( $this, 'renderMenuPage' ),
             plugins_url( 'g28-eucapacito/assets/img/admin-menu-icon.jpg' ),//'dashicons-dashboard',
             58

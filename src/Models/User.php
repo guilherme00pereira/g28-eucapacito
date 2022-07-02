@@ -2,7 +2,7 @@
 
 namespace G28\Eucapacito\Models;
 
-use G28\Eucapacito\Core\OptionsManager;
+use G28\Eucapacito\Core\MessageOptions;
 
 class User
 {
@@ -20,7 +20,7 @@ class User
 
     public function __construct()
     {
-        $this->options = get_option(OptionsManager::OPTIONS_NAME);
+        $this->options = get_option(MessageOptions::OPTIONS_NAME);
     }
 
     public function setUserByEmail( $mail ): User
@@ -47,7 +47,7 @@ class User
                     'role'           => 'subscriber'
                 ]);
                 if (is_wp_error($newUserId)) {
-                    return [false, $this->options[OptionsManager::REGISTER_ERROR]];
+                    return [false, $this->options[MessageOptions::REGISTER_ERROR]];
                 }
                 return [true, [
                     'id'            => $newUserId,
@@ -56,10 +56,10 @@ class User
                     'last_name'     => $name[1]
                 ]];
             } else {
-                return [false, $this->options[OptionsManager::HAVE_MAIL]];
+                return [false, $this->options[MessageOptions::HAVE_MAIL]];
             }
         } else {
-            return [false, $this->options[OptionsManager::INVALID_MAIL]];
+            return [false, $this->options[MessageOptions::INVALID_MAIL]];
         }
     }
 
@@ -79,9 +79,9 @@ class User
         update_user_meta( $this->id,'cidade', $this->city);
 
         if (is_wp_error($user)) {
-            return [false, $this->options[OptionsManager::UPDATE_PROFILE_ERROR]];
+            return [false, $this->options[MessageOptions::UPDATE_PROFILE_ERROR]];
         }
-        return [true, $this->options[OptionsManager::UPDATE_PROFILE_SUCCESS]];
+        return [true, $this->options[MessageOptions::UPDATE_PROFILE_SUCCESS]];
     }
 
     public function generateNewPassword(): string
