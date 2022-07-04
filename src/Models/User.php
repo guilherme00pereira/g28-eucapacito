@@ -2,6 +2,7 @@
 
 namespace G28\Eucapacito\Models;
 
+use G28\Eucapacito\Core\Logger;
 use G28\Eucapacito\Options\MessageOptions;
 
 class User
@@ -35,9 +36,11 @@ class User
     {
         if (is_email($this->email)) {
             if (!email_exists($this->email)) {
-                $name       = explode(' ', $this->name, 2);
-                $username   = strstr($this->email, '@', true);
-                $newUserId  = wp_insert_user([
+                $name           = explode(' ', $this->name, 2);
+                $preUsername    = strstr($this->email, '@', true);
+                $username       = $this->generateUsername( $preUsername );
+                Logger::getInstance()->add($username);
+                $newUserId      = wp_insert_user([
                     'user_pass'      => $this->password,
                     'user_login'     => $username,
                     'user_nicename'  => $username,
@@ -47,7 +50,8 @@ class User
                     'role'           => 'subscriber'
                 ]);
                 if (is_wp_error($newUserId)) {
-                    return [false, $this->options[MessageOptions::REGISTER_ERROR]];
+                    //Logger::getInstance()->add($newUserId->get_error_message());
+                    return [false, $newUserId->get_error_message()];
                 }
                 return [true, [
                     'id'            => $newUserId,
@@ -90,6 +94,16 @@ class User
         $pwd = substr(str_shuffle($data), 0, 8);
         wp_set_password( $pwd, $this->id );
         return $pwd;
+    }
+
+    private function generateUsername( $username ): string
+    {
+        if(username_exists( $username ) )
+        {
+            return $username . "_" . crc32($username);
+        } else {
+            return $username;
+        }
     }
 
     /**
