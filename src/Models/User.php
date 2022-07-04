@@ -2,7 +2,7 @@
 
 namespace G28\Eucapacito\Models;
 
-use G28\Eucapacito\Core\MessageOptions;
+use G28\Eucapacito\Options\MessageOptions;
 
 class User
 {

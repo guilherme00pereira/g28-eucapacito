@@ -1,6 +1,6 @@
 <?php
 
-use G28\Eucapacito\Core\MessageOptions;
+use G28\Eucapacito\Options\MessageOptions;
 
 /**
  * @var array $banners
