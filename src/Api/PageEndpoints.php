@@ -20,6 +20,13 @@ class PageEndpoints
         return self::$_instance;
     }
 
+    public function getTermsAndServicesPage( $request): WP_REST_Response
+    {
+        $meta = maybe_unserialize( get_post_meta("8073", "gdlr-core-page-builder") )[0];
+        $html = $meta[0];
+        return new WP_REST_Response( $html, 200);
+    }
+
     public function getAboutPage( $request ): WP_REST_Response
     {
         $elements   = [];

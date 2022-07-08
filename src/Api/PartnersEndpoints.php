@@ -13,16 +13,17 @@ class PartnersEndpoints
         $partners = [];
 
         $query = new WP_Query([
-            'post_type'     => 'partner',
-            'post_status'   => 'publish',
-            'numberposts'   => -1
+            'post_type'         => 'partner',
+            'post_status'       => 'publish',
+            'numberposts'       => -1,
+            'posts_per_page'    => -1
         ]);
         while ($query->have_posts()) {
             $query->the_post();
             $category = get_the_terms(get_the_ID(), 'partners_category');
             $partners[] = [
                 'name'      => get_the_title(),
-                'image'    => wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), "medium")[0],
+                'image'     => wp_get_attachment_image_src(get_post_thumbnail_id(get_the_ID()), "medium")[0],
                 'category'  => is_bool($category) ? $category : $category[0]->name
             ];
         }

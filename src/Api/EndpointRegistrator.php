@@ -69,6 +69,10 @@ class EndpointRegistrator extends WP_REST_Controller {
             'methods'       => WP_REST_Server::READABLE,
             'callback'      => array( PageEndpoints::getInstance(), 'getAboutPage' )
         ) );
+        register_rest_route( $this->eucapacito_namespace, "/terms-and-services", array(
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( PageEndpoints::getInstance(), 'getTermsAndServicesPage' )
+        ) );
 
         // MEDIA ENDPOINTS
         register_rest_route( $this->eucapacito_namespace, "/banners", array(
