@@ -7,8 +7,5 @@
     },
     "config": {
         "platform-check": false
-    },
-    "require": {
-        "guzzlehttp/guzzle": "^7.4"
     }
 }

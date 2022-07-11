@@ -2,10 +2,7 @@
 
 namespace G28\Eucapacito\Api;
 
-use G28\Eucapacito\Api\Clients\RDStation;
-use G28\Eucapacito\Models\User;
 use WP_REST_Controller;
-use WP_REST_Response;
 use WP_REST_Server;
 
 class EndpointRegistrator extends WP_REST_Controller {
@@ -80,15 +77,7 @@ class EndpointRegistrator extends WP_REST_Controller {
             'callback'      => array( MediaEndpoints::getInstance(), 'getBanners' )
         ) );
 
-        //RD STATION
-//        register_rest_route( $this->eucapacito_namespace, "/rdstation_lead", array(
-//            'methods'       => WP_REST_Server::EDITABLE,
-//            'callback'      => array( IntegrationEndpoints::class, 'registerRDStationLead' )
-//        ) );
-//        register_rest_route( $this->eucapacito_namespace, "/rdstation_cb", array(
-//            'methods'       => WP_REST_Server::EDITABLE,
-//            'callback'      => array( IntegrationEndpoints::class, 'authCallback' )
-//        ) );
+
 	}
 
     public function addFieldsToApi()
@@ -102,6 +91,11 @@ class EndpointRegistrator extends WP_REST_Controller {
 
         add_filter( 'rest_prepare_curso_ec', function( $response, $post, $request ) {
             $response->data[ 'duration' ] = get_post_meta($post->ID, '_learndash_course_grid_duration');
+            return $response;
+        }, 10, 3 );
+
+        add_filter( 'rest_prepare_sfwd-courses', function( $response, $post, $request ) {
+            $response->data[ 'image' ] = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0];
             return $response;
         }, 10, 3 );
 
