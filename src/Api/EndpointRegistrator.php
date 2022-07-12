@@ -77,6 +77,12 @@ class EndpointRegistrator extends WP_REST_Controller {
             'callback'      => array( MediaEndpoints::getInstance(), 'getBanners' )
         ) );
 
+        // LEARNDASH ENDPOINTS
+        register_rest_route( $this->eucapacito_namespace, "/get-certificate", array(
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( LearnDashEndpoints::getInstance(), 'getCertificate' )
+        ) );
+
 
 	}
 
