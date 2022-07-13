@@ -23,7 +23,7 @@ class LearnDashEndpoints
     {
         $userId     = $request["user"];
         $courseId   = $request["course"];
-        learndash_set_users_for_course( $courseId, [$userId]);
+        learndash_user_set_enrolled_courses( $userId, [$courseId] );
         return new WP_REST_Response("ok", 200);
     }
 
