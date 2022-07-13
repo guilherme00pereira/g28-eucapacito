@@ -78,9 +78,13 @@ class EndpointRegistrator extends WP_REST_Controller {
         ) );
 
         // LEARNDASH ENDPOINTS
-        register_rest_route( $this->eucapacito_namespace, "/get-certificate", array(
+        register_rest_route( $this->eucapacito_namespace, "/get-certificate/(?P<id>\d+)", array(
             'methods'       => WP_REST_Server::READABLE,
             'callback'      => array( LearnDashEndpoints::getInstance(), 'getCertificate' )
+        ) );
+        register_rest_route( $this->eucapacito_namespace, "/enroll-user-to-course", array(
+            'methods'       => WP_REST_Server::EDITABLE,
+            'callback'      => array( LearnDashEndpoints::getInstance(), 'enrollUserToCourse' )
         ) );
 
 

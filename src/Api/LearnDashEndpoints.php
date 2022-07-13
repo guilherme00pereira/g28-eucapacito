@@ -19,8 +19,17 @@ class LearnDashEndpoints
         return self::$_instance;
     }
 
+    public function enrollUserToCourse( $request ): WP_REST_Response
+    {
+        $userId     = $request["user"];
+        $courseId   = $request["course"];
+        learndash_set_users_for_course( $courseId, [$userId]);
+        return new WP_REST_Response("ok", 200);
+    }
+
     public function getCertificate( $request ): WP_REST_Response
     {
-        return new WP_REST_Response("ok", 200);
+        $link = learndash_get_certificate_link(10730);
+        return new WP_REST_Response($link, 200);
     }
 }

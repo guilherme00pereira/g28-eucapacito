@@ -27,9 +27,11 @@ class SearchEndpoints
     {
         $courses = [];
         $args = [
-            'post_type'         => 'curso_ec',
+            'post_type'         => ['curso_ec', 'sfwd-courses'],
             'posts_per_page'    => 15,
-            'paged'             => $request['page']
+            'paged'             => $request['page'],
+            'orderby'           => ['post_modified' => 'DESC'],
+
         ];
         if( $request['search'] && !empty( $request['search'] ) ) {
             $args['s'] = $request['search'];
@@ -58,7 +60,7 @@ class SearchEndpoints
                 'slug'              => basename(get_permalink($postId)),
                 'title'             => $query->post->post_title,
                 'image'             => wp_get_attachment_image_src( get_post_thumbnail_id($postId), "medium")[0],
-                'type'              => 'curso_ec',
+                'type'              => $query->post->post_type,
                 'logo'              => wp_get_attachment_image_src( get_post_meta( $postId, 'responsavel')[0], "full")[0],
                 'terms'             => array_column($terms, 'term_id')
             ];
