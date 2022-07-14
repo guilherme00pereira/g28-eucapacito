@@ -2,6 +2,7 @@
 
 namespace G28\Eucapacito\Api;
 
+use Exception;
 use WP_REST_Response;
 
 class LearnDashEndpoints
@@ -32,8 +33,13 @@ class LearnDashEndpoints
         $userId     = $request["user"];
         $courseId   = $request["course"];
         $lessonId   = $request["lesson"];
-        learndash_activity_complete_lesson( $userId, $courseId, $lessonId, time());
-        return new WP_REST_Response("success", 200);
+        try{
+            learndash_activity_complete_lesson( $userId, $courseId, $lessonId, time());
+            return new WP_REST_Response("success", 200);
+        } catch (Exception $e) {
+            return new WP_REST_Response($e, 200);
+        }
+        
     }
 
     public function getCertificate( $request ): WP_REST_Response

@@ -167,10 +167,27 @@ class EndpointRegistrator extends WP_REST_Controller {
             return $response;
         }, 10, 3 );
 
-//        add_filter( 'rest_prepare_sfwd-lessons', function ( $response, $post, $request) {
-//            $response->data["course"] = get_post_data( $post->ID, '_sfwd-lessons' )['lessons_lesson_video_url'];
-//            return $response;
-//        }, 10, 3);
+        /* add_filter( 'rest_prepare_sfwd-question', function( $response, $post, $request ) {
+            $response->data[ 'answers' ] = [];
+            $quizzProId = get_post_meta($post->ID, 'quiz_pro_id');
+            $quizzAnswers = "";
+            if(count($quizzes) > 0) {
+                $response->data[ 'quizz' ] = [
+                    "id"        => $quizzes[0]->ID,
+                    "slug"      => $quizzes[0]->post_name
+                ];
+            }
+            return $response;
+        }, 10, 3 ); */
+       
+
+        add_filter( 'rest_prepare_sfwd-lessons', function ( $response, $post, $request) {
+            $courseId                   = get_post_meta($post->ID, 'course_id')[0];
+            $steps                      = learndash_get_course_steps($courseId);
+            $next                       = $steps[array_search($post->ID, $steps) + 1];
+            $response->data["next"]     = get_post(intval($next))->post_name;
+            return $response;
+        }, 10, 3);
     }
 
     public function ping( $request )
