@@ -24,7 +24,16 @@ class LearnDashEndpoints
         $userId     = $request["user"];
         $courseId   = $request["course"];
         learndash_user_set_enrolled_courses( $userId, [$courseId] );
-        return new WP_REST_Response("ok", 200);
+        return new WP_REST_Response("success", 200);
+    }
+
+    public function markLessonAsComplete( $request ): WP_REST_Response
+    {
+        $userId     = $request["user"];
+        $courseId   = $request["course"];
+        $lessonId   = $request["lesson"];
+        learndash_activity_complete_lesson( $userId, $courseId, $lessonId, time());
+        return new WP_REST_Response("success", 200);
     }
 
     public function getCertificate( $request ): WP_REST_Response

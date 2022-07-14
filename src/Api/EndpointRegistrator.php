@@ -86,6 +86,11 @@ class EndpointRegistrator extends WP_REST_Controller {
             'methods'       => WP_REST_Server::EDITABLE,
             'callback'      => array( LearnDashEndpoints::getInstance(), 'enrollUserToCourse' )
         ) );
+        register_rest_route( $this->eucapacito_namespace, "/lesson-complete", array(
+            'methods'       => WP_REST_Server::EDITABLE,
+            'callback'      => array( LearnDashEndpoints::getInstance(), 'markLessonAsComplete' )
+        ) );
+
 
 
 	}
@@ -101,11 +106,6 @@ class EndpointRegistrator extends WP_REST_Controller {
 
         add_filter( 'rest_prepare_curso_ec', function( $response, $post, $request ) {
             $response->data[ 'duration' ] = get_post_meta($post->ID, '_learndash_course_grid_duration');
-            return $response;
-        }, 10, 3 );
-
-        add_filter( 'rest_prepare_sfwd-courses', function( $response, $post, $request ) {
-            $response->data[ 'image' ] = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0];
             return $response;
         }, 10, 3 );
 
@@ -153,6 +153,24 @@ class EndpointRegistrator extends WP_REST_Controller {
             $response->data[ 'cursos_ec' ] = $newCursos;
             return $response;
         }, 10, 3 );
+
+        add_filter( 'rest_prepare_sfwd-courses', function( $response, $post, $request ) {
+            $response->data[ 'image' ] = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0];
+            $response->data[ 'quizz' ] = [];
+            $quizzes = get_posts([ 'post_type' => 'sfwd-quiz', 'meta_key' => 'course_id', 'meta_value' => $post->ID ]);
+            if(count($quizzes) > 0) {
+                $response->data[ 'quizz' ] = [
+                    "id"        => $quizzes[0]->ID,
+                    "slug"      => $quizzes[0]->post_name
+                ];
+            }
+            return $response;
+        }, 10, 3 );
+
+//        add_filter( 'rest_prepare_sfwd-lessons', function ( $response, $post, $request) {
+//            $response->data["course"] = get_post_data( $post->ID, '_sfwd-lessons' )['lessons_lesson_video_url'];
+//            return $response;
+//        }, 10, 3);
     }
 
     public function ping( $request )
