@@ -2,8 +2,7 @@
 
 namespace G28\Eucapacito\Api;
 
-use G28\Eucapacito\Core\Logger;
-use G28\Eucapacito\DAO\QuestionLD;
+
 use WP_REST_Controller;
 use WP_REST_Server;
 
@@ -80,7 +79,7 @@ class EndpointRegistrator extends WP_REST_Controller {
         ) );
 
         // LEARNDASH ENDPOINTS
-        register_rest_route( $this->eucapacito_namespace, "/get-certificate/(?P<id>\d+)", array(
+        register_rest_route( $this->eucapacito_namespace, "/get-certificate", array(
             'methods'       => WP_REST_Server::READABLE,
             'callback'      => array( LearnDashEndpoints::getInstance(), 'getCertificate' )
         ) );
@@ -182,20 +181,14 @@ class EndpointRegistrator extends WP_REST_Controller {
             return $response;
         }, 10, 3 ); */
 
-//        add_filter( 'rest_prepare_sfwd-question', function ( $response, $post, $request) {
-//            $questionId                 = get_post_meta($post->ID, 'question_pro_id')[0];
-//            $data                       = QuestionLD::getQuestionAnswers($questionId);
-//            $answers                    = maybe_unserialize($data[0]->answer_data);
-//            $response->data["answers"]  = $answers;
-//            return $response;
-//        }, 10, 3);
-
         add_filter( 'rest_prepare_sfwd-lessons', function ( $response, $post, $request) {
             $courseId                   = get_post_meta($post->ID, 'course_id')[0];
             $response->data["course"]   = get_post(intval($courseId))->post_name;
             $steps                      = learndash_get_course_steps($courseId);
             $next                       = $steps[array_search($post->ID, $steps) + 1];
+            $prev                       = $steps[array_search($post->ID, $steps) - 1];
             $response->data["next"]     = get_post(intval($next))->post_name;
+            $response->data["prev"]     = get_post(intval($prev))->post_name;
             return $response;
         }, 10, 3);
     }

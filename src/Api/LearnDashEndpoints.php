@@ -39,7 +39,11 @@ class LearnDashEndpoints
 
     public function getCertificate( $request ): WP_REST_Response
     {
-        $link = learndash_get_certificate_link(10730);
+        $userId         = $request["user"];
+        $quizId         = $request["quiz"];
+        $certificate    = learndash_get_certificate_link($quizId, $userId);
+        $s              = explode('href="',$certificate);
+        $link           = explode('">',$s[1])[0];
         return new WP_REST_Response($link, 200);
     }
 }
