@@ -33,13 +33,8 @@ class LearnDashEndpoints
         $userId     = $request["user"];
         $courseId   = $request["course"];
         $lessonId   = $request["lesson"];
-        try{
-            learndash_activity_complete_lesson( $userId, $courseId, $lessonId, time());
-            return new WP_REST_Response("success", 200);
-        } catch (Exception $e) {
-            return new WP_REST_Response($e, 200);
-        }
-        
+        learndash_activity_complete_lesson( $userId, $courseId, $lessonId, time() - (3 * 60 * 60));
+        return new WP_REST_Response("success", 200);
     }
 
     public function getCertificate( $request ): WP_REST_Response
