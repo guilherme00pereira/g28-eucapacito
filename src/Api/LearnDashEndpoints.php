@@ -40,10 +40,10 @@ class LearnDashEndpoints
 
     public function getUserCourseProgress($request ): WP_REST_Response
     {
-        //$userId     = $request["user"];
-        //$courseId   = $request["course"];
-        $steps      = LearndashDAO::getUserProgress( 52351,10730 );
-        //$steps      = learndash_user_get_course_progress( 52351,10730 );
+        $userId     = $request["user"];
+        $courseId   = $request["course"];
+        $steps      = LearndashDAO::getUserProgress( $userId, $courseId );
+        //$steps      = LearndashDAO::getUserProgress( 52347, 10730 );
         return new WP_REST_Response( $steps, 200 );
     }
 

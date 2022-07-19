@@ -7,19 +7,24 @@ use LDLMS_DB;
 class LearndashDAO
 {
 
-    public static function getUserProgress( $userId, $courseId ): array
+    public static function getUserProgress( $userId, $courseId )
     {
         global $wpdb;
         $steps          = [];
-        $sql            = $wpdb->prepare( 'SELECT * FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE course_id=%d AND user_id=%d', $courseId, $userId );
+        $progress       = learndash_user_get_course_progress( $userId, $courseId )['lessons'];
+        foreach($progress as $k => $v) {
+            $steps[] = [
+                'id'        => $k,
+                'status'    => '0'
+            ];
+        }
+        $sql            = $wpdb->prepare( 'SELECT * FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE
+                             course_id=%d AND user_id=%d AND activity_completed > 0', $courseId, $userId );
         $activities     = $wpdb->get_results( $sql, ARRAY_A );
         if( !empty( $activities ) ) {
             foreach ($activities as $activity) {
-                $steps[] = [
-                    'id'        => $activity['post_id'],
-                    'status'    => isset($activity['activity_completed']) && $activity['activity_completed'] > 0 ? "completed" : null,
-                    'type'      => $activity['activity_type'],
-                ];
+                $key = array_search($activity['post_id'], array_column($steps, 'id'));
+                $steps[$key]['status'] = isset($activity['activity_completed']) && $activity['activity_completed'] > 0 ? "completed" : '0';
             }
         }
         return $steps;
