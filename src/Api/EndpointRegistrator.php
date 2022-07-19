@@ -83,6 +83,10 @@ class EndpointRegistrator extends WP_REST_Controller {
             'methods'       => WP_REST_Server::READABLE,
             'callback'      => array( LearnDashEndpoints::getInstance(), 'getCertificate' )
         ) );
+        register_rest_route( $this->eucapacito_namespace, "/get-user-progress", array(
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( LearnDashEndpoints::getInstance(), 'getUserCourseProgress')
+        ) );
         register_rest_route( $this->eucapacito_namespace, "/enroll-user-to-course", array(
             'methods'       => WP_REST_Server::EDITABLE,
             'callback'      => array( LearnDashEndpoints::getInstance(), 'enrollUserToCourse' )
@@ -168,19 +172,6 @@ class EndpointRegistrator extends WP_REST_Controller {
             return $response;
         }, 10, 3 );
 
-        /* add_filter( 'rest_prepare_sfwd-question', function( $response, $post, $request ) {
-            $response->data[ 'answers' ] = [];
-            $quizzProId = get_post_meta($post->ID, 'quiz_pro_id');
-            $quizzAnswers = "";
-            if(count($quizzes) > 0) {
-                $response->data[ 'quizz' ] = [
-                    "id"        => $quizzes[0]->ID,
-                    "slug"      => $quizzes[0]->post_name
-                ];
-            }
-            return $response;
-        }, 10, 3 ); */
-
         add_filter( 'rest_prepare_sfwd-lessons', function ( $response, $post, $request) {
             $courseId                   = get_post_meta($post->ID, 'course_id')[0];
             $response->data["course"]   = get_post(intval($courseId))->post_name;
@@ -202,7 +193,6 @@ class EndpointRegistrator extends WP_REST_Controller {
 //        $res = array_column($tr, 'term_id');
 //        echo array_intersect([232], $res)[0];
     }
-
     
 
 }

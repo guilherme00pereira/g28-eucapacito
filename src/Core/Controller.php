@@ -13,6 +13,7 @@ class Controller {
 		add_action('admin_menu', array($this, 'addMenuPage' ));
 		add_action( 'admin_enqueue_scripts', [ $this, 'registerStylesAndScripts'] );
 		add_action( 'wp_ajax_ajaxAddBanner', [ $this, 'ajaxAddBanner' ] );
+        add_filter( 'wp_rest_cache/allowed_endpoints', [ $this, 'registerCacheEndpoints' ], 10, 1 );
 	}
 
     public function addMenuPage()
@@ -23,7 +24,7 @@ class Controller {
 			'manage_options',
 			MessageOptions::OPTIONS_NAME,
 			array( $this, 'renderMenuPage' ),
-            plugins_url( 'g28-eucapacito/assets/img/admin-menu-icon.jpg' ),//'dashicons-dashboard',
+            plugins_url( 'g28-eucapacito/assets/img/admin-menu-icon.jpg' ),
             58
 		);
 	}
@@ -73,5 +74,13 @@ class Controller {
 			'action_saveBanner'	=> 'ajaxAddBanner'
 		]);
 	}
+
+    public function registerCacheEndpoints( $allowed_endpoints ): array
+    {
+        if( !isset( $allowed_endpoints['ldlms/v2/'] ) || in_array( 'sfwd-questions', $allowed_endpoints['ldlms/v2/'] ) ) {
+            $allowed_endpoints['ldlms/v2'][] = 'sfwd-questions';
+        }
+        return $allowed_endpoints;
+    }
 
 }

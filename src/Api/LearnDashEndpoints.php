@@ -3,6 +3,7 @@
 namespace G28\Eucapacito\Api;
 
 use Exception;
+use G28\Eucapacito\DAO\LearndashDAO;
 use WP_REST_Response;
 
 class LearnDashEndpoints
@@ -37,6 +38,15 @@ class LearnDashEndpoints
         return new WP_REST_Response("success", 200);
     }
 
+    public function getUserCourseProgress($request ): WP_REST_Response
+    {
+        //$userId     = $request["user"];
+        //$courseId   = $request["course"];
+        $steps      = LearndashDAO::getUserProgress( 52351,10730 );
+        //$steps      = learndash_user_get_course_progress( 52351,10730 );
+        return new WP_REST_Response( $steps, 200 );
+    }
+
     public function getCertificate( $request ): WP_REST_Response
     {
         $userId         = $request["user"];
@@ -44,6 +54,6 @@ class LearnDashEndpoints
         $certificate    = learndash_get_certificate_link($quizId, $userId);
         $s              = explode('href="',$certificate);
         $link           = explode('">',$s[1])[0];
-        return new WP_REST_Response($link, 200);
+        return new WP_REST_Response( $link, 200 );
     }
 }

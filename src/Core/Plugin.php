@@ -122,7 +122,7 @@ class Plugin {
     }
 
     public static function getVersion(): string {
-        return "0.2.26";
+        return "0.2.29";
     }
 
     public static function getName(): string {
