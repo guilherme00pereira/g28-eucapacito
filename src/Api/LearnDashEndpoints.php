@@ -43,7 +43,6 @@ class LearnDashEndpoints
         $userId     = $request["user"];
         $courseId   = $request["course"];
         $steps      = LearndashDAO::getUserProgress( $userId, $courseId );
-        //$steps      = LearndashDAO::getUserProgress( 52347, 10730 );
         return new WP_REST_Response( $steps, 200 );
     }
 
@@ -54,6 +53,25 @@ class LearnDashEndpoints
         $certificate    = learndash_get_certificate_link($quizId, $userId);
         $s              = explode('href="',$certificate);
         $link           = explode('">',$s[1])[0];
+//        $content       = file_get_contents($link);
+//        $pdf            = wp_remote_retrieve_body($response);
+//        header('Content-type: application/pdf');
+//        header('Content-Disposition: attachment; filename="52286.pdf"');
+//        $g28dir         = trailingslashit( wp_upload_dir()['basedir'] . '/g28' );
+//        if( !file_exists( $g28dir )) {
+//            wp_mkdir_p($g28dir);
+//        }
+//        $_filter = true;
+//        add_filter( 'upload_dir', function( $arr ) use( &$_filter ){
+//            if ( $_filter ) {
+//                $folder = '/g28';
+//                $arr['path'] .= $folder;
+//                $arr['url'] .= $folder;
+//                $arr['subdir'] .= $folder;
+//            }
+//            return $arr;
+//        } );
+//        $saved = wp_upload_bits("52286.pdf", null, $content);
         return new WP_REST_Response( $link, 200 );
     }
 }
