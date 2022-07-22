@@ -27,7 +27,7 @@ class SearchEndpoints
     {
         $courses = [];
         $args = [
-            'post_type'         => ['curso_ec', 'sfwd-courses'],
+            'post_type'         => ['posts', 'pages', 'curso_ec', 'sfwd-courses', 'bolsa_de_estudo', 'empregabilidade', 'jornada'],
             'posts_per_page'    => 15,
             'paged'             => $request['page'],
             'orderby'           => ['post_modified' => 'DESC'],
