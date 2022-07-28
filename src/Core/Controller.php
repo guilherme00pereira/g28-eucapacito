@@ -3,6 +3,7 @@
 namespace G28\Eucapacito\Core;
 
 use Exception;
+use G28\Eucapacito\DAO\LearndashDAO;
 use G28\Eucapacito\Options\BannerOptions;
 use G28\Eucapacito\Options\MessageOptions;
 
@@ -14,6 +15,7 @@ class Controller {
 		add_action( 'admin_enqueue_scripts', [ $this, 'registerStylesAndScripts'] );
 		add_action( 'wp_ajax_ajaxAddBanner', [ $this, 'ajaxAddBanner' ] );
         add_filter( 'wp_rest_cache/allowed_endpoints', [ $this, 'registerCacheEndpoints' ], 10, 1 );
+
 	}
 
     public function addMenuPage()
@@ -77,7 +79,7 @@ class Controller {
 
     public function registerCacheEndpoints( $allowed_endpoints ): array
     {
-        if( !isset( $allowed_endpoints['ldlms/v2/'] ) || in_array( 'sfwd-questions', $allowed_endpoints['ldlms/v2/'] ) ) {
+        if (!isset($allowed_endpoints['ldlms/v2/']) || in_array('sfwd-questions', $allowed_endpoints['ldlms/v2/'])) {
             $allowed_endpoints['ldlms/v2'][] = 'sfwd-questions';
         }
         return $allowed_endpoints;

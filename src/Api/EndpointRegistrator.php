@@ -95,6 +95,10 @@ class EndpointRegistrator extends WP_REST_Controller {
             'methods'       => WP_REST_Server::EDITABLE,
             'callback'      => array( LearnDashEndpoints::getInstance(), 'markLessonAsComplete' )
         ) );
+        register_rest_route( $this->eucapacito_namespace, "/set-quiz-progress", array(
+            'methods'       => WP_REST_Server::EDITABLE,
+            'callback'      => array( LearnDashEndpoints::getInstance(), 'setQuizProgress' )
+        ) );
 
 
 

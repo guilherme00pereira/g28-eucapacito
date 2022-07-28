@@ -25,15 +25,19 @@ class SearchEndpoints
 
     public function getSearch( $request ): WP_REST_Response
     {
+        $postTypes = ['post', 'curso_ec', 'sfwd-courses', 'bolsa_de_estudo', 'empregabilidade', 'jornada'];
+        if( !empty( $request['course'] ) ) {
+            $postTypes = ['curso_ec', 'sfwd-courses'];
+        }
         $courses = [];
         $args = [
-            'post_type'         => ['post', 'curso_ec', 'sfwd-courses', 'bolsa_de_estudo', 'empregabilidade', 'jornada'],
+            'post_type'         => $postTypes,
             'posts_per_page'    => 15,
             'paged'             => $request['page'],
             'orderby'           => ['post_modified' => 'DESC'],
 
         ];
-        if( $request['search'] && !empty( $request['search'] ) ) {
+        if( !empty( $request['search'] ) ) {
             $args['s'] = $request['search'];
         }
         if( $request['t'] ) {

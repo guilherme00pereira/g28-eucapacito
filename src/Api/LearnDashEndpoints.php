@@ -50,28 +50,34 @@ class LearnDashEndpoints
     {
         $userId         = $request["user"];
         $quizId         = $request["quiz"];
-        $certificate    = learndash_get_certificate_link($quizId, $userId);
-        $s              = explode('href="',$certificate);
-        $link           = explode('">',$s[1])[0];
-//        $content       = file_get_contents($link);
-//        $pdf            = wp_remote_retrieve_body($response);
-//        header('Content-type: application/pdf');
-//        header('Content-Disposition: attachment; filename="52286.pdf"');
-//        $g28dir         = trailingslashit( wp_upload_dir()['basedir'] . '/g28' );
-//        if( !file_exists( $g28dir )) {
-//            wp_mkdir_p($g28dir);
-//        }
-//        $_filter = true;
-//        add_filter( 'upload_dir', function( $arr ) use( &$_filter ){
-//            if ( $_filter ) {
-//                $folder = '/g28';
-//                $arr['path'] .= $folder;
-//                $arr['url'] .= $folder;
-//                $arr['subdir'] .= $folder;
-//            }
-//            return $arr;
-//        } );
-//        $saved = wp_upload_bits("52286.pdf", null, $content);
-        return new WP_REST_Response( $link, 200 );
+        $det            = learndash_certificate_details($quizId, $userId);
+        return new WP_REST_Response( $det['certificateLink'], 200 );
+    }
+
+    public function setQuizProgress( $request ): WP_REST_Response
+    {
+        $userId         = $request["user"];
+        $quizId         = $request["quiz"];
+        $points         = $request["score"];
+        $total          = $request["total"];
+        $percentage     = $request["percentage"];
+        $quizMeta       = get_post_meta($quizId);
+        $threshold      = $quizMeta['_ld_certificate_threshold'];
+        $passed         = floatval($percentage) > (floatval($threshold[0]) * 100);
+        $args = [
+            'quiz'          => $quizId,
+            'score'         => $points,
+            'count'         => $total,
+            'percentage'    => $percentage,
+            'passed'        => $passed,
+            'completed'     => time()
+        ];
+        $quizzesData = get_user_meta( $userId, '_sfwd-quizzes')[0];
+        if( is_null($quizzesData)) {
+            $quizzesData = [];
+        }
+        $quizzesData[] = $args;
+        update_user_meta( $userId, '_sfwd-quizzes', $quizzesData);
+        return new WP_REST_Response( ['passed' => $passed], 200 );
     }
 }
