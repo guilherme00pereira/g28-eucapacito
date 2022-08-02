@@ -12,13 +12,13 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
     <nav class="nav-tab-wrapper">
     <a href="?page=eucapacito-webapp" class="nav-tab <?php if($tab===null):?>nav-tab-active<?php endif; ?>">Mensagens</a>
     <a href="?page=eucapacito-webapp&tab=banners-home" class="nav-tab <?php if($tab==='banners-home'):?>nav-tab-active<?php endif; ?>">Banners da Home</a>
-    <a href="?page=eucapacito-webapp&tab=configuracoes" class="nav-tab <?php if($tab==='configuracoes'):?>nav-tab-active<?php endif; ?>">Configurações</a>
+    <a href="?page=eucapacito-webapp&tab=logs" class="nav-tab <?php if($tab==='logs'):?>nav-tab-active<?php endif; ?>">Logs</a>
     </nav>
 
     <div class="tab-content">
     <?php switch($tab) :
-    case 'configuracoes':
-        include sprintf( "%sapp-settings.php", Plugin::getTemplateDir() );
+    case 'logs':
+        include sprintf( "%slogs.php", Plugin::getTemplateDir() );
         break;
     case 'banners-home':
         $banners = BannerOptions::getBanners();

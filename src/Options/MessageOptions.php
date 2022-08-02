@@ -16,6 +16,7 @@ class MessageOptions
     const PASSWORD_SEND_MAIL            = 'pwd_send_mail';
     const PASSWORD_INVALID              = 'pwd_invalid';
     const PASSWORD_SUCCESS              = 'pwd_success';
+    const GENERIC_ERROR                 = 'generic_error';
 
     /**
      * @var false|mixed|void
@@ -32,6 +33,17 @@ class MessageOptions
     public function init_settings()
     {
         register_setting(self::OPTIONS_GROUP, self::OPTIONS_NAME);
+        add_settings_section( 'generic_section', 'Mensagens de Erro Genérica', null,self::OPTIONS_NAME );
+        add_settings_field(
+            self::GENERIC_ERROR,
+            'Texto da mensagem',
+            [ $this, 'input_text_cb'],
+            self::OPTIONS_NAME,
+            'generic_section',
+            [
+                'name'  => self::GENERIC_ERROR
+            ]
+        );
         add_settings_section( 'user_profile_section', 'Mensagens de Perfil do Usuário', null,self::OPTIONS_NAME );
         add_settings_field(
             self::REGISTER_ERROR,

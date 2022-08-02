@@ -14,6 +14,7 @@ class Controller {
 		add_action('admin_menu', array($this, 'addMenuPage' ));
 		add_action( 'admin_enqueue_scripts', [ $this, 'registerStylesAndScripts'] );
 		add_action( 'wp_ajax_ajaxAddBanner', [ $this, 'ajaxAddBanner' ] );
+        add_action( 'wp_ajax_ajaxGetLog', [ $this, 'ajaxGetLog' ] );
         add_filter( 'wp_rest_cache/allowed_endpoints', [ $this, 'registerCacheEndpoints' ], 10, 1 );
 
 	}
@@ -36,15 +37,12 @@ class Controller {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
-
 		wp_enqueue_style(Plugin::getAssetsPrefix() . 'admin_style');
 		wp_enqueue_script( Plugin::getAssetsPrefix() . 'admin-scripts' );
-        
 		ob_start();
         include sprintf( "%sadmin-settings.php", Plugin::getTemplateDir() );
         $html = ob_get_clean();
         echo $html;
-		
 	}
 
 	public function ajaxAddBanner()
@@ -60,6 +58,19 @@ class Controller {
         wp_die();
 	}
 
+    public function ajaxGetLog()
+    {
+        try {
+            wp_verify_nonce( 'eucap_nonce' );
+            $file	    = json_decode( stripslashes( $_GET['filename'] ) );
+            $content    = Logger::getInstance()->getLogFileContent( $file );
+            echo json_encode(['success' => true, 'message' => $content]);
+        } catch (Exception $e) {
+            echo json_encode(['error' => false, 'message' => 'Erro ao abrir arquivo de log.']);
+        }
+        wp_die();
+    }
+
 	public function registerStylesAndScripts()
 	{
 		wp_register_style( Plugin::getAssetsPrefix() . 'admin_style', Plugin::getAssetsUrl() . 'css/admin-settings.css' );
@@ -73,7 +84,8 @@ class Controller {
 		wp_localize_script( Plugin::getAssetsPrefix() . 'admin-scripts', 'ajaxobj', [
 			'ajax_url'        	=> admin_url( 'admin-ajax.php' ),
 			'eucap_nonce'		=> wp_create_nonce( 'eucap_nonce' ),
-			'action_saveBanner'	=> 'ajaxAddBanner'
+			'action_saveBanner'	=> 'ajaxAddBanner',
+            'action_getLog'     => 'ajaxGetLog'
 		]);
 	}
 

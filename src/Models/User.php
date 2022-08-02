@@ -32,14 +32,17 @@ class User
         return $this;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function createWPUser(): array
     {
+
         if (is_email($this->email)) {
             if (!email_exists($this->email)) {
                 $name           = explode(' ', $this->name, 2);
                 $preUsername    = strstr($this->email, '@', true);
                 $username       = $this->generateUsername( $preUsername );
-                Logger::getInstance()->add($username);
                 $newUserId      = wp_insert_user([
                     'user_pass'      => $this->password,
                     'user_login'     => $username,
@@ -50,8 +53,8 @@ class User
                     'role'           => 'subscriber'
                 ]);
                 if (is_wp_error($newUserId)) {
-                    //Logger::getInstance()->add($newUserId->get_error_message());
-                    return [false, $newUserId->get_error_message()];
+                    Logger::getInstance()->add("WP Error ao cadastrar usuário - " . $newUserId->get_error_message());
+                    throw new \Exception($newUserId->get_error_message());
                 }
                 return [true, [
                     'id'            => $newUserId,
@@ -67,6 +70,9 @@ class User
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function updateWPUser(): array
     {
         $name  = explode(' ', $this->name, 2);
@@ -83,6 +89,7 @@ class User
         update_user_meta( $this->id,'cidade', $this->city);
 
         if (is_wp_error($user)) {
+            Logger::getInstance()->add("WP Error ao atualizar usuário - " . $user->get_error_message());
             return [false, $this->options[MessageOptions::UPDATE_PROFILE_ERROR]];
         }
         return [true, $this->options[MessageOptions::UPDATE_PROFILE_SUCCESS]];
