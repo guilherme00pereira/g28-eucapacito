@@ -21,10 +21,10 @@ class Logger
         return self::$_instance;
     }
 
-    public function add( string $message ) {
+    public function add( string $origin, string $message ) {
         date_default_timezone_set('America/Sao_Paulo');
         $timestamp    = date('d/m/Y h:i:s A');
-        $output = "[ $timestamp ] - $message" . PHP_EOL;
+        $output = "[ $timestamp ] $origin => $message" . PHP_EOL;
         file_put_contents( $this->file, $output, FILE_APPEND);
     }
 

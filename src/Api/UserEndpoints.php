@@ -28,7 +28,7 @@ class UserEndpoints
             }
             return new WP_REST_Response($response, 500);
         } catch (\Exception $e) {
-            Logger::getInstance()->add("Erro ao registrar usuário: - " . $e->getMessage());
+            Logger::getInstance()->add("registerUser", "Erro ao registrar usuário: - " . $e->getMessage());
             return new WP_REST_Response($this->options[MessageOptions::GENERIC_ERROR], 500);
         }
     }
@@ -51,7 +51,7 @@ class UserEndpoints
             }
             return new WP_REST_Response( $response , 500 );
         } catch (\Exception $e) {
-            Logger::getInstance()->add("Erro ao atualizar usuário: - " . $e->getMessage());
+            Logger::getInstance()->add("updateUser", "Erro ao atualizar usuário: - " . $e->getMessage());
             return new WP_REST_Response($this->options[MessageOptions::GENERIC_ERROR], 500);
         }
     }
@@ -77,7 +77,7 @@ class UserEndpoints
                 return new WP_REST_Response($this->options[MessageOptions::INVALID_MAIL], 500);
             }
         } catch (\Exception $e) {
-            Logger::getInstance()->add("Erro ao recuperar senha: - " . $e->getMessage());
+            Logger::getInstance()->add("recoverPassword", "Erro ao recuperar senha: - " . $e->getMessage());
             return new WP_REST_Response($this->options[MessageOptions::GENERIC_ERROR], 500);
         }
     }
@@ -97,7 +97,7 @@ class UserEndpoints
                 return new WP_REST_Response($this->options[MessageOptions::PASSWORD_INVALID], 500);
             }
         } catch (\Exception $e) {
-            Logger::getInstance()->add("Erro ao trocar senha: - " . $e->getMessage());
+            Logger::getInstance()->add("changePassword", "Erro ao trocar senha: - " . $e->getMessage());
             return new WP_REST_Response($this->options[MessageOptions::GENERIC_ERROR], 500);
         }
     }

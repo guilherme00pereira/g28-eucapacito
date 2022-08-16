@@ -53,8 +53,7 @@ class User
                     'role'           => 'subscriber'
                 ]);
                 if (is_wp_error($newUserId)) {
-                    Logger::getInstance()->add("WP Error ao cadastrar usuário - " . $newUserId->get_error_message());
-                    throw new \Exception($newUserId->get_error_message());
+                    throw new \Exception("usuário: " . $username . " - messagem - " . $newUserId->get_error_message());
                 }
                 return [true, [
                     'id'            => $newUserId,
@@ -89,8 +88,7 @@ class User
         update_user_meta( $this->id,'cidade', $this->city);
 
         if (is_wp_error($user)) {
-            Logger::getInstance()->add("WP Error ao atualizar usuário - " . $user->get_error_message());
-            return [false, $this->options[MessageOptions::UPDATE_PROFILE_ERROR]];
+            throw new \Exception("usuário: " . $name[0] . " " . $name[1] . " - messagem - " . $user->get_error_message());
         }
         return [true, $this->options[MessageOptions::UPDATE_PROFILE_SUCCESS]];
     }
@@ -107,7 +105,7 @@ class User
     {
         if(username_exists( $username ) )
         {
-            return $username . "_" . crc32($username);
+            return $username . "_" . crc32($username . strval( time() ));
         } else {
             return $username;
         }

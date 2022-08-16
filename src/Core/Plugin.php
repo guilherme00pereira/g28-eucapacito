@@ -120,12 +120,4 @@ class Plugin {
     public static function getAssetsUrl(): string {
         return self::$assets_url;
     }
-
-    public static function getVersion(): string {
-        return "0.3.1";
-    }
-
-    public static function getName(): string {
-        return "G28 EuCapacito Plugin";
-    }
 }
