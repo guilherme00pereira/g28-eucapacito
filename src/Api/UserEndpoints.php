@@ -106,6 +106,7 @@ class UserEndpoints
     {
         $userId     = $request['user_id'];
         $mediaId    = $request['media_id'];
+        update_post_meta( $mediaId, 'is_avatar', true );
         update_user_meta( $userId, 'avatar_id', $mediaId);
         $img        = wp_get_attachment_image_url( $mediaId );
         return new WP_REST_Response([ 'image' => $img ], 200);

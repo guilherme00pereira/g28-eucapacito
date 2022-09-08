@@ -3,7 +3,6 @@
 namespace G28\Eucapacito\Core;
 
 use Exception;
-use G28\Eucapacito\DAO\LearndashDAO;
 use G28\Eucapacito\Options\BannerOptions;
 use G28\Eucapacito\Options\MessageOptions;
 
@@ -15,8 +14,10 @@ class Controller {
 		add_action( 'admin_enqueue_scripts', [ $this, 'registerStylesAndScripts'] );
 		add_action( 'wp_ajax_ajaxAddBanner', [ $this, 'ajaxAddBanner' ] );
         add_action( 'wp_ajax_ajaxGetLog', [ $this, 'ajaxGetLog' ] );
-        add_filter( 'wp_rest_cache/allowed_endpoints', [ $this, 'registerCacheEndpoints' ], 10, 1 );
-
+        add_action( 'wp_ajax_ajaxRuAvatar', [ $this, 'ajaxRuAvatar' ] );
+        add_filter( 'wp_rest_cache/allowed_endpoints', [ $this, 'registerCacheEndpoints' ], 100, 1 );
+        add_action( 'pre_get_posts', [ $this, 'hideUserMediaProfile' ], 10, 1 );
+        add_filter( 'ajax_query_attachments_args' , [ $this, 'ajaxhideUserMediaProfile' ], 10, 1 );
 	}
 
     public function addMenuPage()
@@ -85,16 +86,78 @@ class Controller {
 			'ajax_url'        	=> admin_url( 'admin-ajax.php' ),
 			'eucap_nonce'		=> wp_create_nonce( 'eucap_nonce' ),
 			'action_saveBanner'	=> 'ajaxAddBanner',
-            'action_getLog'     => 'ajaxGetLog'
+            'action_getLog'     => 'ajaxGetLog',
+            'action_runAvatar'  => 'ajaxRuAvatar'
 		]);
 	}
 
     public function registerCacheEndpoints( $allowed_endpoints ): array
     {
-        if (!isset($allowed_endpoints['ldlms/v2/']) || in_array('sfwd-questions', $allowed_endpoints['ldlms/v2/'])) {
+        if (!isset($allowed_endpoints['ldlms/v2']) || in_array('sfwd-questions', $allowed_endpoints['ldlms/v2'])) {
             $allowed_endpoints['ldlms/v2'][] = 'sfwd-questions';
         }
+        if ( isset($allowed_endpoints['wp/v2'])  && ( $key = array_search('users', $allowed_endpoints['wp/v2'] ) ) !== false ) {
+            unset( $allowed_endpoints[ 'wp/v2' ][ $key ] );
+        }
         return $allowed_endpoints;
+    }
+
+    public function hideUserMediaProfile( $query )
+    {
+        if ( ! is_admin() ) {
+            return;
+        }
+        if ( ! $query->is_main_query() ) {
+            return;
+        }
+        $screen = get_current_screen();
+        if ( ! $screen || 'upload' !== $screen->id || 'attachment' !== $screen->post_type ) {
+            return;
+        }
+        $query->set('meta_query', [
+            [
+                'key'       => 'is_avatar',
+                'compare'   => 'NOT EXISTS',
+            ]
+        ]);
+        return $query;
+    }
+
+    public function ajaxhideUserMediaProfile( $query )
+    {
+        if ( ! is_admin() ) {
+            return $query;
+        }
+        if( $query['post_type'] != 'attachment' ) {
+            return $query;
+        }
+        $query['meta_query'] = [
+            [
+                'key'       => 'is_avatar',
+                'compare'   => 'NOT EXISTS',
+            ]
+        ];
+        return $query;
+    }
+
+    public function ajaxRuAvatar()
+    {
+        try {
+            wp_verify_nonce( 'eucap_nonce' );
+            $count          = 0;
+            $subscribers    = DBQueries::getSubscribersIds();
+            $authors        = DBQueries::getMediaAuthorIds();
+            foreach ($authors as $author){
+                if(in_array( $author['author'], $subscribers)) {
+                    update_post_meta($author['id'], 'is_avatar', true);
+                    $count++;
+                }
+            }
+            echo json_encode(['success' => true, 'message' => $count . " posts processados"]);
+        } catch (Exception $e) {
+            echo json_encode(['error' => false, 'message' => 'Erro ao atualizar avatars.']);
+        }
+        wp_die();
     }
 
 }

@@ -2,8 +2,8 @@
 
 namespace G28\Eucapacito\Api;
 
-use Exception;
-use G28\Eucapacito\DAO\LearndashDAO;
+
+use G28\Eucapacito\Core\DBQueries;
 use WP_REST_Response;
 
 class LearnDashEndpoints
@@ -42,7 +42,7 @@ class LearnDashEndpoints
     {
         $userId     = $request["user"];
         $courseId   = $request["course"];
-        $steps      = LearndashDAO::getUserProgress( $userId, $courseId );
+        $steps      = DBQueries::getLearndashUserProgress( $userId, $courseId );
         return new WP_REST_Response( $steps, 200 );
     }
 

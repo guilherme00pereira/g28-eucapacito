@@ -33,13 +33,9 @@ class Logger
         return array_diff( scandir(Plugin::getDir() . 'logs', SCANDIR_SORT_DESCENDING), array('.', '..'));
     }
 
-    public function getLogFileContent( $file = null )
+    public function getLogFileContent( $file ): array
     {
-        if( is_null( $file ) ) {
-            return [ $this->actualFilename, nl2br(file_get_contents( $this->file )) ];
-        } else {
-            $filepath = Plugin::getDir() . 'logs/' . $file;
-            return [ $file, nl2br(file_get_contents( $filepath )) ];
-        }
+        $filepath = Plugin::getDir() . 'logs/' . $file;
+        return [ $file, nl2br(file_get_contents( $filepath )) ];
     }
 }

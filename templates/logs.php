@@ -3,11 +3,14 @@
 use G28\Eucapacito\Core\Logger;
 
 $files          = logger::getInstance()->getLogFiles();
-[ $file, $log ] = Logger::getInstance()->getLogFileContent();
+[ $file, $log ] = Logger::getInstance()->getLogFileContent( $files[0] );
 
 
 ?>
 <div class="log-container">
+    <div>
+        <button class="button button-primary" id="runAvatar">Run</button>
+    </div>
     <div class="log-select-wrapper">
         <label for="logFiles">Arquivos de log: </label>
         <select id="logFiles" name="logFiles">
