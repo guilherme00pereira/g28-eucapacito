@@ -17,6 +17,10 @@ class User
     private $country;
     private $state;
     private $city;
+    /**
+     * @var false|mixed|null
+     */
+    private $options;
 
 
     public function __construct()
@@ -122,9 +126,10 @@ class User
     /**
      * Set the value of email
      *
+     * @param $email
      * @return  self
      */
-    public function setEmail($email)
+    public function setEmail($email): User
     {
         $this->email = $email;
 
@@ -142,9 +147,10 @@ class User
     /**
      * Set the value of name
      *
+     * @param $name
      * @return  self
      */
-    public function setName($name)
+    public function setName($name): User
     {
         $this->name = $name;
 
@@ -162,9 +168,10 @@ class User
     /**
      * Set the value of password
      *
+     * @param $password
      * @return  self
      */
-    public function setPassword($password)
+    public function setPassword($password): User
     {
         $this->password = $password;
 
@@ -182,9 +189,12 @@ class User
     /**
      * Set the value of birthdate
      *
+     * @param $day
+     * @param $month
+     * @param $year
      * @return  self
      */
-    public function setBirthdate($day, $month, $year)
+    public function setBirthdate($day, $month, $year): User
     {
         $this->birthdate = $year . $month . $day;
 
@@ -202,9 +212,11 @@ class User
     /**
      * Set the value of phone
      *
+     * @param $ddd
+     * @param $number
      * @return  self
      */
-    public function setPhone($ddd, $number)
+    public function setPhone($ddd, $number): User
     {
         $this->phone = $ddd . $number;
 
@@ -222,9 +234,10 @@ class User
     /**
      * Set the value of country
      *
+     * @param $country
      * @return  self
      */
-    public function setCountry($country)
+    public function setCountry($country): User
     {
         $this->country = $country;
 
@@ -242,9 +255,10 @@ class User
     /**
      * Set the value of state
      *
+     * @param $state
      * @return  self
      */
-    public function setState($state)
+    public function setState($state): User
     {
         $this->state = $state;
 
@@ -262,9 +276,10 @@ class User
     /**
      * Set the value of city
      *
+     * @param $city
      * @return  self
      */
-    public function setCity($city)
+    public function setCity($city): User
     {
         $this->city = $city;
 
@@ -282,9 +297,10 @@ class User
     /**
      * Set the value of id
      *
+     * @param $id
      * @return  self
      */ 
-    public function setId($id)
+    public function setId($id): User
     {
         $this->id = $id;
 

@@ -18,6 +18,7 @@ class Controller {
         add_filter( 'wp_rest_cache/allowed_endpoints', [ $this, 'registerCacheEndpoints' ], 100, 1 );
         add_action( 'pre_get_posts', [ $this, 'hideUserMediaProfile' ], 10, 1 );
         add_filter( 'ajax_query_attachments_args' , [ $this, 'ajaxhideUserMediaProfile' ], 10, 1 );
+        add_action( 'enqueue_block_editor_assets', [ $this, 'registerBlockEditorScripts' ] );
 	}
 
     public function addMenuPage()
@@ -82,6 +83,7 @@ class Controller {
             null,
             true
         );
+
 		wp_localize_script( Plugin::getAssetsPrefix() . 'admin-scripts', 'ajaxobj', [
 			'ajax_url'        	=> admin_url( 'admin-ajax.php' ),
 			'eucap_nonce'		=> wp_create_nonce( 'eucap_nonce' ),
@@ -90,6 +92,17 @@ class Controller {
             'action_runAvatar'  => 'ajaxRuAvatar'
 		]);
 	}
+
+    public function registerBlockEditorScripts()
+    {
+        wp_enqueue_script(
+            Plugin::getAssetsPrefix() . 'all-tags-panel',
+            Plugin::getAssetsUrl() . 'js/all-tags-panel.js',
+            array( 'wp-edit-post', 'wp-element', 'wp-components', 'wp-plugins', 'wp-data' ),
+            null,
+            true
+        );
+    }
 
     public function registerCacheEndpoints( $allowed_endpoints ): array
     {

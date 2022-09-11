@@ -10,6 +10,11 @@ use WP_REST_Response;
 class UserEndpoints
 {
 
+    /**
+     * @var false|mixed|null
+     */
+    private $options;
+
     public function __construct()
     {
         $this->options = get_option(MessageOptions::OPTIONS_NAME);
