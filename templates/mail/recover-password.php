@@ -1,0 +1,23 @@
+<?php
+
+use G28\Eucapacito\Core\Plugin;
+
+$link = "https://localhost:3000/redefinir-senha";
+$imageSrc = Plugin::getAssetsUrl() . "img/"
+
+?>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eu Capacito</title>
+</head>
+<body>
+    <a href="<?php echo $link ?>">
+        <img src="mail-password-recovery.png" alt="Recuperar senha" />
+    </a>
+</body>
+</html>

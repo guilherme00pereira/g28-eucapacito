@@ -44,6 +44,10 @@ class EndpointRegistrator extends WP_REST_Controller {
             'methods'       => WP_REST_Server::EDITABLE,
             'callback'      => array( UserEndpoints::class, 'changePassword' )
         ) );
+        register_rest_route( $this->eucapacito_namespace, '/resetpwd', array(
+            'methods'       => WP_REST_Server::EDITABLE,
+            'callback'      => array( UserEndpoints::class, 'resetPassword' )
+        ) );
         register_rest_route( $this->jwt, $this->eucapacito_namespace . '/avatar', array(
             'methods'       => WP_REST_Server::EDITABLE,
             'callback'      => array( UserEndpoints::class, 'avatar' )

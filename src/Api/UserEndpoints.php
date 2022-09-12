@@ -5,6 +5,7 @@ namespace G28\Eucapacito\Api;
 use G28\Eucapacito\Core\Logger;
 use G28\Eucapacito\Models\User;
 use G28\Eucapacito\Options\MessageOptions;
+use G28\Eucapacito\Core\Plugin;
 use WP_REST_Response;
 
 class UserEndpoints
@@ -63,18 +64,20 @@ class UserEndpoints
 
     public function recoverPassword( $request ): WP_REST_Response
     {
+        $mail = $request['email'];
         try {
-            if (is_email($request['email'])) {
-                if (!email_exists($request['email'])) {
+            if ( is_email( $mail ) ) {
+                if ( !email_exists( $mail ) ) {
                     return new WP_REST_Response($this->options[MessageOptions::DONT_HAVE_MAIL], 500);
                 } else {
-                    $user = new User();
-                    $newPwd = $user->setUserByEmail($request['email'])->generateNewPassword();
-                    $message = get_option(MessageOptions::OPTIONS_NAME)[MessageOptions::MAIL_MESSAGE];
+                    $user = get_user_by( 'mail', $mail );
+                    ob_start();
+                    include sprintf( "%smail/recover-password.php", Plugin::getTemplateDir() );
+                    $html = ob_get_clean();
                     wp_mail(
-                        $request['email'],
+                        $email,
                         "Eu Capacito - Recuperação de senha",
-                        $message . " " . $newPwd
+                       $html
                     );
                     return new WP_REST_Response($this->options[MessageOptions::PASSWORD_SEND_MAIL], 200);
                 }
@@ -103,6 +106,19 @@ class UserEndpoints
             }
         } catch (\Exception $e) {
             Logger::getInstance()->add("changePassword", "Erro ao trocar senha: - " . $e->getMessage());
+            return new WP_REST_Response($this->options[MessageOptions::GENERIC_ERROR], 500);
+        }
+    }
+
+    public function resetPassword( $request ): WP_REST_Response
+    {
+        try {
+            $user_id = "";
+            $new = $request['password'];
+            wp_set_password($new, $user_id);
+            return new WP_REST_Response($this->options[MessageOptions::PASSWORD_SUCCESS], 200);
+        } catch (\Exception $e) {
+            Logger::getInstance()->add("changePassword", "Erro ao redefinitr senha: - " . $e->getMessage());
             return new WP_REST_Response($this->options[MessageOptions::GENERIC_ERROR], 500);
         }
     }
