@@ -2,8 +2,16 @@
 
 use G28\Eucapacito\Core\Plugin;
 
-$link = "https://localhost:3000/redefinir-senha";
-$imageSrc = Plugin::getAssetsUrl() . "img/"
+/**
+ * @var string $mail
+ */
+
+$user = get_user_by( 'email', $mail );
+$time = time() + (24 * 3600);
+$hash = md5($user->ID . ":" . $time);
+set_transient('$hash', $user->ID, $time);
+$link = "https://eucapacito.com.br/redefinir-senha/" . $hash;
+$imageSrc = Plugin::getAssetsUrl() . "img/mail-password-recovery.png";
 
 ?>
 
@@ -17,7 +25,7 @@ $imageSrc = Plugin::getAssetsUrl() . "img/"
 </head>
 <body>
     <a href="<?php echo $link ?>">
-        <img src="mail-password-recovery.png" alt="Recuperar senha" />
+        <img src="<?php echo $imageSrc ?>" alt="Recuperar senha" />
     </a>
 </body>
 </html>

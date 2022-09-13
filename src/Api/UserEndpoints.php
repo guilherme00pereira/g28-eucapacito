@@ -70,14 +70,15 @@ class UserEndpoints
                 if ( !email_exists( $mail ) ) {
                     return new WP_REST_Response($this->options[MessageOptions::DONT_HAVE_MAIL], 500);
                 } else {
-                    $user = get_user_by( 'mail', $mail );
                     ob_start();
                     include sprintf( "%smail/recover-password.php", Plugin::getTemplateDir() );
                     $html = ob_get_clean();
+                    $headers = array('Content-Type: text/html; charset=UTF-8');
                     wp_mail(
-                        $email,
+                        $mail,
                         "Eu Capacito - Recuperação de senha",
-                       $html
+                       $html,
+                        $headers
                     );
                     return new WP_REST_Response($this->options[MessageOptions::PASSWORD_SEND_MAIL], 200);
                 }
@@ -113,10 +114,24 @@ class UserEndpoints
     public function resetPassword( $request ): WP_REST_Response
     {
         try {
-            $user_id = "";
-            $new = $request['password'];
+            $code       = $request['c'];
+            $user_id    = get_transient($code);
+            $new        = $request['password'];
             wp_set_password($new, $user_id);
             return new WP_REST_Response($this->options[MessageOptions::PASSWORD_SUCCESS], 200);
+        } catch (\Exception $e) {
+            Logger::getInstance()->add("changePassword", "Erro ao redefinitr senha: - " . $e->getMessage());
+            return new WP_REST_Response($this->options[MessageOptions::GENERIC_ERROR], 500);
+        }
+    }
+
+    public function verifyResetLink( $request ): WP_REST_Response
+    {
+        try {
+            if( is_bool( get_transient( $request['code'] ) ) ) {
+                return new WP_REST_Response(false, 200);
+            }
+            return new WP_REST_Response(true, 410);
         } catch (\Exception $e) {
             Logger::getInstance()->add("changePassword", "Erro ao redefinitr senha: - " . $e->getMessage());
             return new WP_REST_Response($this->options[MessageOptions::GENERIC_ERROR], 500);
