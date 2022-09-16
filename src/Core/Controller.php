@@ -91,6 +91,15 @@ class Controller {
             'action_getLog'     => 'ajaxGetLog',
             'action_runAvatar'  => 'ajaxRuAvatar'
 		]);
+
+        $asset_file = include( Plugin::getDir() . 'app/build/index.asset.php');
+
+        wp_enqueue_script(
+            'eucap_guten_app',
+            Plugin::getAppUrl() . 'build/index.js',
+            $asset_file['dependencies'],
+            $asset_file['version']
+        );
 	}
 
     public function registerBlockEditorScripts()

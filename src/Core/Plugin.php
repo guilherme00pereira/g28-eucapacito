@@ -46,6 +46,11 @@ class Plugin {
      */
     private static string $template_dir;
 
+    /**
+     * @var string
+     */
+    private static string $app_url;
+
     public function __construct( $root ) {
         self::$url              = plugin_dir_url( $root );
         self::$dir              = plugin_dir_path( $root );
@@ -53,6 +58,7 @@ class Plugin {
         self::$template_dir     = self::$dir . 'templates/';
         self::$slug             = trim( dirname( self::$plugin_base ), '/' );
         self::$assets_url       = self::$url . 'assets/';
+        self::$app_url          = self::$url . 'app/';
         self::$text_domain      = self::$slug;
         self::$assets_prefix    = 'g28_eucapacito_';
     }
@@ -119,5 +125,13 @@ class Plugin {
      */
     public static function getAssetsUrl(): string {
         return self::$assets_url;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getAppUrl(): string
+    {
+        return self::$app_url;
     }
 }
