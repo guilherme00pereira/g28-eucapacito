@@ -114,13 +114,16 @@ class UserEndpoints
     public function resetPassword( $request ): WP_REST_Response
     {
         try {
-            $code       = $request['c'];
+            $code       = $request['code'];
+            Logger::getInstance()->add("resetPassword", "code: - " . $code);
             $user_id    = get_transient($code);
+            Logger::getInstance()->add("resetPassword", "user: - " . $user_id);
             $new        = $request['password'];
+            Logger::getInstance()->add("resetPassword", "pwd: - " . $new);
             wp_set_password($new, $user_id);
             return new WP_REST_Response($this->options[MessageOptions::PASSWORD_SUCCESS], 200);
         } catch (\Exception $e) {
-            Logger::getInstance()->add("changePassword", "Erro ao redefinitr senha: - " . $e->getMessage());
+            Logger::getInstance()->add("resetPassword", "Erro ao redefinitr senha: - " . $e->getMessage());
             return new WP_REST_Response($this->options[MessageOptions::GENERIC_ERROR], 500);
         }
     }

@@ -9,9 +9,9 @@ use G28\Eucapacito\Core\Plugin;
 $user = get_user_by( 'email', $mail );
 $time = time() + (24 * 3600);
 $hash = md5($user->ID . ":" . $time);
-set_transient('$hash', $user->ID, $time);
-$link = "https://eucapacito.com.br/redefinir-senha/" . $hash;
-$imageSrc = Plugin::getAssetsUrl() . "img/mail-password-recovery.png";
+set_transient($hash, $user->ID, $time);
+$link = "https://eucapacito.com.br/redefinir-senha/?c=" . $hash;
+$imageSrc = Plugin::getAssetsUrl() . "img/mail-pwd-recovery.png";
 
 ?>
 
