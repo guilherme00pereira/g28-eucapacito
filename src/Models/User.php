@@ -2,6 +2,7 @@
 
 namespace G28\Eucapacito\Models;
 
+use Exception;
 use G28\Eucapacito\Core\Logger;
 use G28\Eucapacito\Options\MessageOptions;
 
@@ -28,20 +29,11 @@ class User
         $this->options = get_option(MessageOptions::OPTIONS_NAME);
     }
 
-    public function setUserByEmail( $mail ): User
-    {
-        $user           = get_user_by( 'email', $mail);
-        $this->id       = $user->ID;
-        $this->email    = $mail;
-        return $this;
-    }
-
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function createWPUser(): array
     {
-
         if (is_email($this->email)) {
             if (!email_exists($this->email)) {
                 $name           = explode(' ', $this->name, 2);
@@ -57,13 +49,14 @@ class User
                     'role'           => 'subscriber'
                 ]);
                 if (is_wp_error($newUserId)) {
-                    throw new \Exception("usuário: " . $username . " - messagem - " . $newUserId->get_error_message());
+                    throw new Exception("usuário: " . $username . " - messagem - " . $newUserId->get_error_message());
                 }
                 return [true, [
                     'id'            => $newUserId,
                     'username'      => $username,
                     'first_name'    => $name[0],
-                    'last_name'     => $name[1]
+                    'last_name'     => $name[1],
+                    'password'      => $this->password
                 ]];
             } else {
                 return [false, $this->options[MessageOptions::HAVE_MAIL]];
@@ -74,7 +67,7 @@ class User
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function updateWPUser(): array
     {
@@ -92,17 +85,16 @@ class User
         update_user_meta( $this->id,'cidade', $this->city);
 
         if (is_wp_error($user)) {
-            throw new \Exception("usuário: " . $name[0] . " " . $name[1] . " - messagem - " . $user->get_error_message());
+            throw new Exception("usuário: " . $name[0] . " " . $name[1] . " - messagem - " . $user->get_error_message());
         }
         return [true, $this->options[MessageOptions::UPDATE_PROFILE_SUCCESS]];
     }
 
-    public function generateNewPassword(): string
+    public function saveAvatar( $userId, $mediaId)
     {
-        $data = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz';
-        $pwd = substr(str_shuffle($data), 0, 8);
-        wp_set_password( $pwd, $this->id );
-        return $pwd;
+        update_post_meta( $mediaId, 'is_avatar', true );
+        update_user_meta( $userId, 'avatar_id', $mediaId);
+        return wp_get_attachment_image_url( $mediaId );
     }
 
     private function generateUsername( $username ): string

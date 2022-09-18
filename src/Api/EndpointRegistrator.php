@@ -32,6 +32,10 @@ class EndpointRegistrator extends WP_REST_Controller {
             'methods'       => WP_REST_Server::EDITABLE,
             'callback'      => array( UserEndpoints::class, 'registerUser' )
         ) );
+        register_rest_route( $this->eucapacito_namespace, '/social-login', array(
+            'methods'       => WP_REST_Server::EDITABLE,
+            'callback'      => array( UserEndpoints::class, 'loginOrRegisterSocialUser' )
+        ) );
         register_rest_route( $this->eucapacito_namespace, '/update-profile', array(
             'methods'       => WP_REST_Server::EDITABLE,
             'callback'      => array( UserEndpoints::class, 'updateUser' )
@@ -84,6 +88,12 @@ class EndpointRegistrator extends WP_REST_Controller {
         register_rest_route( $this->eucapacito_namespace, "/banners", array(
             'methods'       => WP_REST_Server::READABLE,
             'callback'      => array( MediaEndpoints::getInstance(), 'getBanners' )
+        ) );
+
+        // TAGS ENDPOINTS
+        register_rest_route( $this->eucapacito_namespace, "/post-tags", array(
+            'methods'       => WP_REST_Server::EDITABLE,
+            'callback'      => array( TagsEndpoints::getInstance(), 'savePostTags' )
         ) );
 
         // LEARNDASH ENDPOINTS

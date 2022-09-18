@@ -18,7 +18,7 @@ class Controller {
         add_filter( 'wp_rest_cache/allowed_endpoints', [ $this, 'registerCacheEndpoints' ], 100, 1 );
         add_action( 'pre_get_posts', [ $this, 'hideUserMediaProfile' ], 10, 1 );
         add_filter( 'ajax_query_attachments_args' , [ $this, 'ajaxhideUserMediaProfile' ], 10, 1 );
-        add_action( 'enqueue_block_editor_assets', [ $this, 'registerBlockEditorScripts' ] );
+        add_filter( 'rest_endpoints', [ $this, 'enableAllTags']);
 	}
 
     public function addMenuPage()
@@ -102,17 +102,6 @@ class Controller {
         );
 	}
 
-    public function registerBlockEditorScripts()
-    {
-        wp_enqueue_script(
-            Plugin::getAssetsPrefix() . 'all-tags-panel',
-            Plugin::getAssetsUrl() . 'js/all-tags-panel.js',
-            array( 'wp-edit-post', 'wp-element', 'wp-components', 'wp-plugins', 'wp-data' ),
-            null,
-            true
-        );
-    }
-
     public function registerCacheEndpoints( $allowed_endpoints ): array
     {
         if (!isset($allowed_endpoints['ldlms/v2']) || in_array('sfwd-questions', $allowed_endpoints['ldlms/v2'])) {
@@ -180,6 +169,13 @@ class Controller {
             echo json_encode(['error' => false, 'message' => 'Erro ao atualizar avatars.']);
         }
         wp_die();
+    }
+
+    public function enableAllTags( $endpoints ): array
+    {
+        if( isset( $endpoints['/wp/v2/tags'][0]['args']['per_page']['maximum'] ) )
+            $endpoints['/wp/v2/tags'][0]['args']['per_page']['maximum'] = 999;
+        return $endpoints;
     }
 
 }

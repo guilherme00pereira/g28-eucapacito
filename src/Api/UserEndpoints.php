@@ -39,6 +39,38 @@ class UserEndpoints
         }
     }
 
+    public function loginOrRegisterSocialUser( $request ): WP_REST_Response
+    {
+        try {
+            $mail = $request['email'];
+            if ( email_exists( $mail ) ) {
+                $user = get_user_by_email( $mail );
+                if( !is_bool( $user ) ) {
+                    return new WP_REST_Response([
+                        'id'            => $user->ID,
+                        'email'         => $mail,
+                        'username'      => $user->user_login,
+                        'first_name'    => $user->first_name,
+                        'last_name'     => $user->last_name,
+                    ], 200);
+                }
+            } else {
+                $user = new User();
+                $user->setEmail( $mail )
+                    ->setName( $request['name'] )
+                    ->setPassword( $request['password'] );
+                list($created, $response) = $user->createWPUser();
+                if ($created) {
+                    return new WP_REST_Response($response, 200);
+                }
+                return new WP_REST_Response($response, 500);
+            }
+        } catch (\Exception $e) {
+            Logger::getInstance()->add("loginOrRegisterSocialUser", "Erro ao logar/registrar usuário Google: - " . $e->getMessage());
+            return new WP_REST_Response($this->options[MessageOptions::GENERIC_ERROR], 500);
+        }
+    }
+
     public function updateUser( $request ): WP_REST_Response
     {
         try {
@@ -145,9 +177,8 @@ class UserEndpoints
     {
         $userId     = $request['user_id'];
         $mediaId    = $request['media_id'];
-        update_post_meta( $mediaId, 'is_avatar', true );
-        update_user_meta( $userId, 'avatar_id', $mediaId);
-        $img        = wp_get_attachment_image_url( $mediaId );
+        $user       = new User();
+        $img        = $user->saveAvatar( $userId, $mediaId );
         return new WP_REST_Response([ 'image' => $img ], 200);
     }
 
