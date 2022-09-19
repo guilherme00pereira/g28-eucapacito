@@ -146,7 +146,7 @@ class UserEndpoints
     public function resetPassword( $request ): WP_REST_Response
     {
         try {
-            $code       = $request['code'];
+            $code       = $request['c'];
             Logger::getInstance()->add("resetPassword", "code: - " . $code);
             $user_id    = get_transient($code);
             Logger::getInstance()->add("resetPassword", "user: - " . $user_id);
