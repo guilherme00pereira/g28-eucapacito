@@ -132,4 +132,70 @@
 		}, 'json');
 	});
 
+
+// region Pages Relationship
+	$(document).on('click', '#saveFields', function (e) {
+		let map = [];
+		const list = $('#fieldsMapList tbody').children();
+		list.each( function (idx) {
+			const wpInput = $(this).find('input[name="wp[' + idx + ']"]')
+			const reactInput = $(this).find('input[name="react[' + idx + ']"]')
+			const flag = $(this).data('required');
+			map.push({
+				wp: wpInput.val(),
+				react: reactInput.val(),
+				required: flag ?? false
+			})
+		})
+		let params = {
+			action: ajaxobj.action_saveFields,
+			nonce: ajaxobj.g28_integra_wpvsoft_nonce,
+			fields: map
+		}
+		doAjax(params,'#loadingSaveFields');
+	});
+
+	$(document).on('click', '.addRow', function (e) {
+		const type = $(this).data('type');
+		const listElement = type === 'field' ? '#fieldsMapList tbody' : '#featuresMapList tbody';
+		const noFields = type === 'field' ? '#noFieldsRow' : '#noFeaturesRow';
+		const list = $(listElement);
+		const count = list.children().length;
+		$(noFields).remove();
+		let html = `<tr>
+						<td>
+							<input name="react[${count}]" type="text" value="" class="regular-text">
+						</td>
+						<td>
+							=>
+						</td>
+						<td>
+							<input name="wp[${count}]" type="text" value="" class="regular-text">
+						</td>
+						<td><button class="button g28-button-danger delField">X</button></td>
+					</tr>`; 
+		list.prepend(html)
+	});
+
+	$(document).on('click', '.delField', function (e) {
+		if(window.confirm("Deseja revomer este item?")) {
+			$(this).closest("tr").remove();
+		}
+	});
+
+	function doAjax(params, loadingField) {
+		const div = $('#actionReturn');
+		const loading = $(loadingField);
+		$.post(ajaxobj.ajax_url, params, function(res){
+			loading.show()
+			if(res.success) {
+				div.addClass('notice notice-success notice-alt')
+			} else {
+				div.addClass('notice notice-error notice-alt')
+			}
+			div.html(res.message);
+			loading.hide()
+		}, 'json');
+	}
+
 }(jQuery));

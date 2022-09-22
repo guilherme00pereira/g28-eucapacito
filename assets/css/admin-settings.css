@@ -82,3 +82,23 @@
     font-weight: 600;
     padding-right: 1rem;
 }
+
+.table-container {
+    margin: 1em;
+}
+
+.table-fields {
+    margin: 2rem;
+}
+
+.table-fields th {
+    font-size: 1.25em;
+}
+
+.table-fields td {
+    text-align: center;
+}
+
+.table-fields span {
+    color: #777777;
+}

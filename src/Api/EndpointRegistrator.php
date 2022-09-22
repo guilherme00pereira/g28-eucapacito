@@ -5,6 +5,8 @@ namespace G28\Eucapacito\Api;
 
 use WP_REST_Controller;
 use WP_REST_Server;
+use WP_REST_Response;
+use G28\Eucapacito\Options\PageOptions;
 
 class EndpointRegistrator extends WP_REST_Controller {
 
@@ -25,6 +27,12 @@ class EndpointRegistrator extends WP_REST_Controller {
         register_rest_route( $this->eucapacito_namespace, '/ping', array(
             'methods'       => WP_REST_Server::READABLE,
             'callback'      => array( $this, 'ping' )
+        ));
+
+        // CONFIG
+        register_rest_route( $this->eucapacito_namespace, '/config', array(
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( $this, 'config' )
         ));
 
         // USER ENDPOINTS
@@ -214,6 +222,12 @@ class EndpointRegistrator extends WP_REST_Controller {
 //        $tr = wp_get_post_terms( 10429, $t );
 //        $res = array_column($tr, 'term_id');
 //        echo array_intersect([232], $res)[0];
+    }
+
+    public function config( $request ): WP_REST_Response
+    {
+        $pagesOptions = PageOptions::getPagesRelationship();
+        return new WP_REST_Response($pagesOptions, 200);
     }
     
 
