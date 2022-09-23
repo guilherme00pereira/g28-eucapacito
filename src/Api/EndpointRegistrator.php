@@ -226,7 +226,8 @@ class EndpointRegistrator extends WP_REST_Controller {
 
     public function config( $request ): WP_REST_Response
     {
-        $pagesOptions = PageOptions::getPagesRelationship();
+        $pageOptions = new PageOptions();
+        $pagesOptions = $pageOptions->getPagesRelationship();
         return new WP_REST_Response($pagesOptions, 200);
     }
     

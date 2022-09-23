@@ -12,7 +12,7 @@ $tab = isset($_GET['tab']) ? $_GET['tab'] : $default_tab;
     <nav class="nav-tab-wrapper">
     <a href="?page=eucapacito-webapp" class="nav-tab <?php if($tab===null):?>nav-tab-active<?php endif; ?>">Mensagens</a>
     <a href="?page=eucapacito-webapp&tab=banners-home" class="nav-tab <?php if($tab==='banners-home'):?>nav-tab-active<?php endif; ?>">Banners da Home</a>
-    <a href="?page=eucapacito-webapp&tab=pages" class="nav-tab <?php if($tab==='logs'):?>nav-tab-active<?php endif; ?>">Páginas</a>    
+    <a href="?page=eucapacito-webapp&tab=pages" class="nav-tab <?php if($tab==='pages'):?>nav-tab-active<?php endif; ?>">Páginas</a>    
     <a href="?page=eucapacito-webapp&tab=logs" class="nav-tab <?php if($tab==='logs'):?>nav-tab-active<?php endif; ?>">Logs</a>
     </nav>
 

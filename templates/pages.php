@@ -1,10 +1,9 @@
 <?php
 
-$reactPages = [
-    'home'      => 'Home',
-    'cursos'    => 'Cursos'
-];
+use G28\Eucapacito\Options\PageOptions;
 
+$pages = new PageOptions();
+$reactPages = $pages->getPagesRelationship();
 $wpPages = get_pages();
 
 ?>
@@ -12,7 +11,6 @@ $wpPages = get_pages();
 <div class="table-container">
     <div id="actionReturn"></div>
     <div id="fieldsMap">
-        <button class="button addRow" data-type="field"> + adicionar relacionamento</button>
         <button class="button button-primary" id="saveFields">Salvar</button>
         <span id="loadingSaveFields" style="display: none; padding-left: 15px;">
             <img src="<?php echo esc_url(get_admin_url() . 'images/spinner.gif'); ?>" alt="loading" />
@@ -28,18 +26,20 @@ $wpPages = get_pages();
             </thead>
             <tbody>
                 <?php if (count($reactPages) > 0) { ?>
-                    <?php foreach ($reactPages as $index => $page) { ?>
-                        <tr>
-                            <td data-react-page="<?php echo $index ?>">
-                                <?php echo $page ?>
+                    <?php foreach ($reactPages as $page) { ?>
+                        <tr data-react-key="<?php echo $page['key'] ?>" data-wp-id="<?php echo $page['wp_id'] ?>">
+                            <td>
+                                <?php echo $page['title'] ?>
                             </td>
                             <td>
                                 =
                             </td>
                             <td>
-                                <select id="wpPages">
-                                    <?php foreach ($wpPages as $page) { ?>
-                                        <option value="<?php echo $page->ID ?>"><?php echo $page->post_title ?></option>
+                                <select name="wpPages">
+                                    <?php foreach ($wpPages as $wp) { ?>
+                                        <option value="<?php echo $wp->ID ?>" <?php if( $wp->ID == $page['wp_id']) { ?>selected="selected"<?php } ?>>
+                                            <?php echo $wp->post_title ?>
+                                        </option>
                                     <?php } ?>
                                 </select>
                             </td>
