@@ -152,10 +152,29 @@
 		})
 		let params = {
 			action: ajaxobj.action_saveFields,
-			nonce: ajaxobj.g28_integra_wpvsoft_nonce,
+			nonce: ajaxobj.eucap_nonce,
 			fields: map
 		}
 		
+		$.post(ajaxobj.ajax_url, params, function(res){
+			loading.show()
+			if(res.success) {
+				div.addClass('notice notice-success notice-alt')
+			} else {
+				div.addClass('notice notice-error notice-alt')
+			}
+			div.html(res.message);
+			loading.hide()
+		}, 'json');
+	});
+
+	$(document).on('click', '#resetPages', function (e) {
+		const div = $('#actionReturn');
+		const loading = $('#loadingSaveFields');
+		let params = {
+			action: ajaxobj.action_resetPages,
+			nonce: ajaxobj.eucap_nonce,
+		}
 		$.post(ajaxobj.ajax_url, params, function(res){
 			loading.show()
 			if(res.success) {

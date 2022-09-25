@@ -5,11 +5,19 @@ namespace G28\Eucapacito\Options;
 class PageOptions 
 {
     const PAGE_OPTIONS = 'eucapacito_page_relationship';
-    private string $pageOptions;
 
     public function __construct()
     {
         $this->init();
+    }
+
+    private function init()
+    {
+        $options = get_option(self::PAGE_OPTIONS);
+        if( is_bool( $options ) || empty( $options ) )
+        {
+            update_option( self::PAGE_OPTIONS, $this->pagesDefault() );
+        }
     }
 
     public function getPagesRelationship()
@@ -17,17 +25,12 @@ class PageOptions
         return get_option(self::PAGE_OPTIONS);
     }
 
-    private function init()
+    public function resetRelations()
     {
-        $options = get_option(self::PAGE_OPTIONS);
-        
-        if( is_null( $options ) || is_bool( $options ) || empty( $options ) )
-        {
-            update_option( self::PAGE_OPTIONS, $this->pagesDefault() );
-        }
+        update_option( self::PAGE_OPTIONS, $this->pagesDefault() );
     }
 
-    private function pagesDefault()
+    private function pagesDefault(): array
     {
         return [
             [
@@ -46,9 +49,24 @@ class PageOptions
                 'wp_id'     => '9453'
             ],
             [
+                'key'       => 'oportunidades',
+                'title'     => 'Oportunidades',
+                'wp_id'     => '8573'
+            ],
+            [
                 'key'       => 'parceiros',
                 'title'     => 'Parceiros',
                 'wp_id'     => '9254'
+            ],
+            [
+                'key'       => 'videos',
+                'title'     => 'Vídeos',
+                'wp_id'     => '9529'
+            ],
+            [
+                'key'       => 'ebooks',
+                'title'     => 'E-Books',
+                'wp_id'     => '9536'
             ],
             [
                 'key'       => 'contato',

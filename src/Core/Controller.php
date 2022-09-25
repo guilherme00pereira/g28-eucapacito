@@ -5,6 +5,7 @@ namespace G28\Eucapacito\Core;
 use Exception;
 use G28\Eucapacito\Options\BannerOptions;
 use G28\Eucapacito\Options\MessageOptions;
+use G28\Eucapacito\Options\PageOptions;
 
 class Controller {
 
@@ -14,6 +15,7 @@ class Controller {
 		add_action( 'admin_enqueue_scripts', [ $this, 'registerStylesAndScripts'] );
 		add_action( 'wp_ajax_ajaxAddBanner', [ $this, 'ajaxAddBanner' ] );
         add_action( 'wp_ajax_ajaxGetLog', [ $this, 'ajaxGetLog' ] );
+        add_action( 'wp_ajax_ajaxResetPages', [ $this, 'ajaxResetPages' ] );
         add_action( 'wp_ajax_ajaxRuAvatar', [ $this, 'ajaxRuAvatar' ] );
         add_filter( 'wp_rest_cache/allowed_endpoints', [ $this, 'registerCacheEndpoints' ], 100, 1 );
         add_action( 'pre_get_posts', [ $this, 'hideUserMediaProfile' ], 10, 1 );
@@ -73,6 +75,19 @@ class Controller {
         wp_die();
     }
 
+    public function ajaxResetPages()
+    {
+        try {
+            wp_verify_nonce( 'eucap_nonce' );
+            $options = new PageOptions();
+            $options->resetRelations();
+            echo json_encode(['success' => true, 'message' => "Resetado com sucesso"]);
+        } catch (Exception $e) {
+            echo json_encode(['error' => false, 'message' => 'Erro ao abrir arquivo de log.']);
+        }
+        wp_die();
+    }
+
 	public function registerStylesAndScripts()
 	{
 		wp_register_style( Plugin::getAssetsPrefix() . 'admin_style', Plugin::getAssetsUrl() . 'css/admin-settings.css' );
@@ -85,11 +100,12 @@ class Controller {
         );
 
 		wp_localize_script( Plugin::getAssetsPrefix() . 'admin-scripts', 'ajaxobj', [
-			'ajax_url'        	=> admin_url( 'admin-ajax.php' ),
-			'eucap_nonce'		=> wp_create_nonce( 'eucap_nonce' ),
-			'action_saveBanner'	=> 'ajaxAddBanner',
-            'action_getLog'     => 'ajaxGetLog',
-            'action_runAvatar'  => 'ajaxRuAvatar'
+			'ajax_url'        	    => admin_url( 'admin-ajax.php' ),
+			'eucap_nonce'		    => wp_create_nonce( 'eucap_nonce' ),
+			'action_saveBanner'	    => 'ajaxAddBanner',
+            'action_getLog'         => 'ajaxGetLog',
+            'action_resetPages'     => 'ajaxResetPages',
+            'action_runAvatar'      => 'ajaxRuAvatar'
 		]);
 
         $asset_file = include( Plugin::getDir() . 'app/build/index.asset.php');

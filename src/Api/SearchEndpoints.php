@@ -10,10 +10,12 @@ class SearchEndpoints
 {
     protected static ?SearchEndpoints $_instance = null;
     private array $taxonomies;
+    private array $filteredTerms;
 
     public function __construct()
     {
-        $this->taxonomies = get_object_taxonomies( 'curso_ec' );
+        $this->taxonomies       = get_object_taxonomies( 'curso_ec' );
+        $this->filteredTerms    = [];
     }
 
     public static function getInstance(): ?SearchEndpoints {
@@ -41,14 +43,14 @@ class SearchEndpoints
             $args['s'] = $request['search'];
         }
         if( $request['t'] ) {
-            $filteredTerms = explode(',', $request['t']);
-            $args['tax_query'] = [ 'relation' => 'OR' ];
+            $this->filteredTerms    = explode(',', $request['t']);
+            $args['tax_query']      = [ 'relation' => 'OR' ];
             foreach( $this->taxonomies as $taxonomy ) {
                 $args['tax_query'][] = [
                     [
                         'taxonomy' => $taxonomy,
                         'field' => 'term_id',
-                        'terms' => $filteredTerms,
+                        'terms' => $this->filteredTerms,
                     ]
                 ];
             }
@@ -92,9 +94,10 @@ class SearchEndpoints
             ));
             foreach( $terms as $term ){
                 $filters[$term->taxonomy][] = [
-                    'id' => $term->term_id,
-                    'name' => $term->name,
-                    'count' => $term->count,
+                    'id'        => $term->term_id,
+                    'name'      => $term->name,
+                    'count'     => $term->count,
+                    'selected'  => in_array( $term->term_id, $this->filteredTerms )
                 ];
             }
         }

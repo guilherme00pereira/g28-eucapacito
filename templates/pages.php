@@ -11,6 +11,7 @@ $wpPages = get_pages();
 <div class="table-container">
     <div id="actionReturn"></div>
     <div id="fieldsMap">
+        <button class="button button-secondary" id="resetPages">Reset</button>
         <button class="button button-primary" id="saveFields">Salvar</button>
         <span id="loadingSaveFields" style="display: none; padding-left: 15px;">
             <img src="<?php echo esc_url(get_admin_url() . 'images/spinner.gif'); ?>" alt="loading" />
