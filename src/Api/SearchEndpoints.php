@@ -2,6 +2,7 @@
 
 namespace G28\Eucapacito\Api;
 
+use G28\Eucapacito\Core\DBQueries;
 use G28\Eucapacito\Core\Logger;
 use WP_REST_Response;
 use WP_Query;
@@ -29,7 +30,7 @@ class SearchEndpoints
     {
         $postTypes = ['post', 'curso_ec', 'sfwd-courses', 'bolsa_de_estudo', 'empregabilidade', 'jornada'];
         if( !empty( $request['course'] ) ) {
-            $postTypes = ['curso_ec', 'sfwd-courses'];
+            $postTypes = ['curso_ec'];
         }
         $courses = [];
         $args = [
@@ -44,15 +45,15 @@ class SearchEndpoints
         }
         if( $request['t'] ) {
             $this->filteredTerms    = explode(',', $request['t']);
-            $args['tax_query']      = [ 'relation' => 'OR' ];
-            foreach( $this->taxonomies as $taxonomy ) {
-                $args['tax_query'][] = [
+            $args['tax_query']      = [ 'relation' => 'AND' ];
+            $taxonomies             = DBQueries::getTaxnomoiesByTerms($request['t']);
+            foreach( $taxonomies as $taxonomy ) {
+                $args['tax_query'][] = 
                     [
                         'taxonomy' => $taxonomy,
                         'field' => 'term_id',
                         'terms' => $this->filteredTerms,
-                    ]
-                ];
+                    ];
             }
         }
         $query = new WP_Query( $args );

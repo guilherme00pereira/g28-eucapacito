@@ -65,4 +65,17 @@ class DBQueries
         return $ids;
     }
 
+    public static function getTaxnomoiesByTerms( $ids )
+    {
+        global $wpdb;
+        $taxs       = [];
+        $sql        = "select taxonomy from wp_term_taxonomy where term_id in (" . $ids . ")";
+        $names      = $wpdb->get_results( $sql, ARRAY_A );
+        foreach($names as $name)
+        {
+            $taxs[] = $name['taxonomy'];
+        }
+        return $taxs;
+    }
+
 }
