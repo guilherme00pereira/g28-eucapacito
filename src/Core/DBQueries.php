@@ -78,4 +78,17 @@ class DBQueries
         return $taxs;
     }
 
+    public static function getEcCoursesSlug(): array
+    {
+        global $wpdb;
+        $slugs      = [];
+        $sql        = "select post_name as slug from wp_posts where post_type = 'curso_ec'  and post_name <> '' and post_status = 'publish'";
+        $rows      = $wpdb->get_results( $sql, ARRAY_A );
+        foreach($rows as $row)
+        {
+            $slugs[] = $row['slug'];
+        }
+        return $slugs;
+    }
+
 }

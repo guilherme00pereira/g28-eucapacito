@@ -104,6 +104,12 @@ class EndpointRegistrator extends WP_REST_Controller {
             'callback'      => array( TagsEndpoints::getInstance(), 'savePostTags' )
         ) );
 
+        // COURSES ENDPOINTS
+        register_rest_route( $this->eucapacito_namespace, "/course-slugs", array(
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( CourseEndpoints::getInstance(), 'getAllEcCoursesSlug' )
+        ) );
+
         // LEARNDASH ENDPOINTS
         register_rest_route( $this->eucapacito_namespace, "/get-certificate", array(
             'methods'       => WP_REST_Server::READABLE,
