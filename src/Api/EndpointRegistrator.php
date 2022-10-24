@@ -110,6 +110,24 @@ class EndpointRegistrator extends WP_REST_Controller {
             'callback'      => array( CourseEndpoints::getInstance(), 'getAllEcCoursesSlug' )
         ) );
 
+        // CONTENT ENDPOINTS
+        register_rest_route( $this->eucapacito_namespace, "/blog-slugs", array(
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( ContentEndpoints::getInstance(), 'getAllPostsSlug' )
+        ) );
+        register_rest_route( $this->eucapacito_namespace, "/scholarship-slugs", array(
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( ContentEndpoints::getInstance(), 'getAllScholarshipsSlug' )
+        ) );
+        register_rest_route( $this->eucapacito_namespace, "/employability-slugs", array(
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( ContentEndpoints::getInstance(), 'getAllEmployabilitiesSlug' )
+        ) );
+        register_rest_route( $this->eucapacito_namespace, "/journey-slugs", array(
+            'methods'       => WP_REST_Server::READABLE,
+            'callback'      => array( ContentEndpoints::getInstance(), 'getAllJourneysSlug' )
+        ) );
+
         // LEARNDASH ENDPOINTS
         register_rest_route( $this->eucapacito_namespace, "/get-certificate", array(
             'methods'       => WP_REST_Server::READABLE,

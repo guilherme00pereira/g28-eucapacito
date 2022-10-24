@@ -91,4 +91,57 @@ class DBQueries
         return $slugs;
     }
 
+    public static function getPostsSlug(): array
+    {
+        global $wpdb;
+        $slugs      = [];
+        $sql        = "select post_name as slug from wp_posts where post_type = 'post'  and post_name <> '' and post_status = 'publish'";
+        $rows      = $wpdb->get_results( $sql, ARRAY_A );
+        foreach($rows as $row)
+        {
+            $slugs[] = $row['slug'];
+        }
+        return $slugs;
+    }
+
+
+    public static function getScholarshipsSlug(): array
+    {
+        global $wpdb;
+        $slugs      = [];
+        $sql        = "select post_name as slug from wp_posts where post_type = 'bolsa_de_estudo'  and post_name <> '' and post_status = 'publish'";
+        $rows      = $wpdb->get_results( $sql, ARRAY_A );
+        foreach($rows as $row)
+        {
+            $slugs[] = $row['slug'];
+        }
+        return $slugs;
+    }
+
+    public static function getEmployabilitiesSlug(): array
+    {
+        global $wpdb;
+        $slugs      = [];
+        $sql        = "select post_name as slug from wp_posts where post_type = 'empregabilidade'  and post_name <> '' and post_status = 'publish'";
+        $rows      = $wpdb->get_results( $sql, ARRAY_A );
+        foreach($rows as $row)
+        {
+            $slugs[] = $row['slug'];
+        }
+        return $slugs;
+    }
+
+    public static function getJourneysSlug(): array
+    {
+        global $wpdb;
+        $slugs      = [];
+        $sql        = "select post_name as slug from wp_posts where post_type = 'jornada'  and post_name <> '' and post_status = 'publish'";
+        $rows      = $wpdb->get_results( $sql, ARRAY_A );
+        foreach($rows as $row)
+        {
+            $slugs[] = $row['slug'];
+        }
+        return $slugs;
+    }
+
 }
