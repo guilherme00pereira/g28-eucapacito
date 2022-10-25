@@ -66,9 +66,9 @@ class SearchEndpoints
                 'id'                => $postId,
                 'slug'              => basename(get_permalink($postId)),
                 'title'             => $query->post->post_title,
-                'image'             => wp_get_attachment_image_src( get_post_thumbnail_id($postId), "full")[0],
+                'image'             => wp_get_attachment_image_src( get_post_thumbnail_id($postId), "medium-large")[0],
                 'type'              => $query->post->post_type,
-                'logo'              => wp_get_attachment_image_src( get_post_meta( $postId, 'responsavel')[0], "full")[0],
+                'logo'              => wp_get_attachment_image_src( get_post_meta( $postId, 'responsavel')[0], "medium-large")[0],
                 'terms'             => array_column($terms, 'term_id')
             ];
         }

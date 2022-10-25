@@ -165,6 +165,18 @@ class EndpointRegistrator extends WP_REST_Controller {
 
         add_filter( 'rest_prepare_curso_ec', function( $response, $post, $request ) {
             $response->data[ 'duration' ] = get_post_meta($post->ID, '_learndash_course_grid_duration');
+            if( !empty( $response->data[ 'featured_media' ] ) )
+            {
+                $response->data[ 'featured_image_src' ] =  wp_get_attachment_image_src($response->data[ 'featured_media' ], "medium")[0];
+            }
+            return $response;
+        }, 10, 3 );
+
+        add_filter( 'rest_prepare_post', function( $response, $post, $request ) {
+            if( !empty( $response->data[ 'featured_media' ] ) )
+            {
+                $response->data[ 'featured_image_src' ] =  wp_get_attachment_image_src($response->data[ 'featured_media' ], "medium")[0];
+            }
             return $response;
         }, 10, 3 );
 
@@ -186,6 +198,11 @@ class EndpointRegistrator extends WP_REST_Controller {
 
         add_filter( 'rest_prepare_bolsa_de_estudo', function( $response, $post, $request ) {
             $cursos = $response->data[ 'cursos_ec' ];
+            $imagem = $response->data[ 'imagem' ];
+            if( !empty( $imagem ) ){
+                $imagem["guid"] = wp_get_attachment_image_src($imagem['ID'], "medium")[0];
+                $response->data[ 'imagem' ] = $imagem;
+            }
             $newCursos = [];
             foreach($cursos as $curso)
             {
