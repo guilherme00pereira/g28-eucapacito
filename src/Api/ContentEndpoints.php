@@ -29,7 +29,7 @@ class ContentEndpoints
 
     public static function getAllScholarshipsSlug(): WP_REST_Response
     {
-        $slugs = DBQueries::getPostsSlug();
+        $slugs = DBQueries::getScholarshipsSlug();
         return new WP_REST_Response( $slugs , 200 );
     }
 

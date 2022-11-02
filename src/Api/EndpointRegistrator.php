@@ -190,7 +190,7 @@ class EndpointRegistrator extends WP_REST_Controller {
                 $curso['title'] = $post->post_title;
                 $curso['image'] = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0];
                 $curso['post_content'] = "";
-                array_push($newCursos, $curso);
+                $newCursos[] = $curso;
             }
             $response->data[ 'cursos_ec' ] = $newCursos;
             return $response;
@@ -210,7 +210,7 @@ class EndpointRegistrator extends WP_REST_Controller {
                 $curso['title'] = $post->post_title;
                 $curso['image'] = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0];
                 $curso['responsavel'] = $curso['responsavel']['guid'];
-                array_push($newCursos, $curso);
+                $newCursos[] = $curso;
             }
             $response->data[ 'cursos_ec' ] = $newCursos;
             return $response;
@@ -224,7 +224,7 @@ class EndpointRegistrator extends WP_REST_Controller {
                 $post = get_post($curso['ID']);
                 $curso['title'] = $post->post_title;
                 $curso['image'] = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0];
-                array_push($newCursos, $curso);
+                $newCursos[] = $curso;
             }
             $response->data[ 'cursos_ec' ] = $newCursos;
             return $response;
