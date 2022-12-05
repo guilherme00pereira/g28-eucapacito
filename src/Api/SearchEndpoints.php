@@ -31,6 +31,14 @@ class SearchEndpoints
         $postTypes = ['post', 'curso_ec', 'sfwd-courses', 'bolsa_de_estudo', 'empregabilidade', 'jornada'];
         if( !empty( $request['course'] ) ) {
             $postTypes = ['curso_ec'];
+           /*  $partner = DBQueries::getPartnerIdByName( $request['search'] );
+            $args['tax_query']      = [ 'relation' => 'AND' ];
+            $args['tax_query'][]    = 
+            [
+                'taxonomy' => $partner[0],
+                'field' => 'term_id',
+                'terms' => $partner[1],
+            ]; */
         }
         $courses = [];
         $args = [
@@ -45,7 +53,9 @@ class SearchEndpoints
         }
         if( $request['t'] ) {
             $this->filteredTerms    = explode(',', $request['t']);
-            $args['tax_query']      = [ 'relation' => 'AND' ];
+            if( !array_key_exists( 'tax_query', $args ) ) {
+                $args['tax_query']      = [ 'relation' => 'AND' ];
+            }
             $taxonomies             = DBQueries::getTaxnomoiesByTerms($request['t']);
             foreach( $taxonomies as $taxonomy ) {
                 $args['tax_query'][] = 

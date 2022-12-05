@@ -17,7 +17,7 @@ class Webhook
     public function dispatch($id, $post, $updated)
     {
         $type       = $post->post_type === "post" ? "blog" : $post->post_type;
-        $url        = "https://eucapacito.com.br/api/revalidate?secret=" . self::HASH . "&entity=" . $type . "&slug=" . $post;
+        $url        = "https://eucapacito.com.br/api/revalidate?secret=" . self::HASH . "&entity=" . $type . "&slug=" . $post->post_name;
         Logger::getInstance()->add("Webhook", "chamando react api, URL = " . $url);
         $response   = wp_remote_post($url);
         if( is_wp_error( $response ) )

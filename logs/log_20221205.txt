@@ -1,0 +1,2 @@
+[ 05/12/2022 10:07:19 AM ] Webhook => chamando react api, URL = https://eucapacito.com.br/api/revalidate?secret=b6733291dc8383f5940917a98863fa5123816d53c116a7fee42ae5db0140627c&entity=blog&slug=
+[ 05/12/2022 10:07:22 AM ] Webhook => Retorno api react: 

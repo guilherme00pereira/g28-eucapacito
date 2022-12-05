@@ -78,6 +78,18 @@ class DBQueries
         return $taxs;
     }
 
+    public static function getPartnerIdByName( $name )
+    {
+        global $wpdb;
+        $partner    = [];
+        $sql        = "SELECT t.term_id, x.taxonomy FROM wp_term_taxonomy x inner join wp_terms t on t.term_id = x.term_id
+         WHERE taxonomy = 'parceiro_ec' AND t.name like '%" . $name . "%'";
+        $rows       = $wpdb->get_results( $sql, ARRAY_A );
+        $partner[0] = $rows['term_id'];
+        $partner[0] = $rows['taxonomy'];
+        return $partner;
+    }
+
     public static function getEcCoursesSlug(): array
     {
         global $wpdb;
