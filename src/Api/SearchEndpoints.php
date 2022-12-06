@@ -37,7 +37,7 @@ class SearchEndpoints
             [
                 'taxonomy' => $partner[0],
                 'field' => 'term_id',
-                'terms' => $partner[1],
+                'terms' => $xpartner[1],
             ]; */
         }
         $courses = [];
