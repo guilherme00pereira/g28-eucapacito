@@ -11,7 +11,7 @@ class CustomPostTypes
         add_filter( 'register_post_type_args', [ $this, 'registerPartnersPostTypeArgs' ], 10, 2 );
         add_post_type_support( 'jornada', 'thumbnail' );
         add_filter( 'manage_depoimento_posts_columns', [ $this, 'addDepoimentosTableColumn' ] );
-        add_action( 'manage_depoimento_posts_columns', [ $this, 'addDepoimentosTableColumnData' ] );
+        add_action( 'manage_depoimento_posts_custom_column', [ $this, 'addDepoimentosTableColumnData' ], 10, 2 );
     }
 
     public function registerPartnersPostType()
@@ -67,7 +67,7 @@ class CustomPostTypes
     {
         if($column === 'order')
         {
-            echo "";
+            echo get_post_meta($post_id, 'ordem')[0] ?? "";
         }
     }
 }
