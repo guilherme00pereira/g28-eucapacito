@@ -3,6 +3,7 @@
 namespace G28\Eucapacito\Api;
 
 
+use G28\Eucapacito\Core\ImageConverter;
 use WP_REST_Controller;
 use WP_REST_Server;
 use WP_REST_Response;
@@ -167,7 +168,8 @@ class EndpointRegistrator extends WP_REST_Controller {
             $response->data[ 'duration' ] = get_post_meta($post->ID, '_learndash_course_grid_duration');
             if( !empty( $response->data[ 'featured_media' ] ) )
             {
-                $response->data[ 'featured_image_src' ] =  wp_get_attachment_image_src($response->data[ 'featured_media' ], "medium")[0];
+                //$imageLink = ImageConverter::generetaWebpFile( wp_get_attachment_image_src($response->data[ 'featured_media' ], "medium")[0] );
+                $response->data[ 'featured_image_src' ] = wp_get_attachment_image_src($response->data[ 'featured_media' ], "medium")[0];// $imageLink;
             }
             return $response;
         }, 10, 3 );
@@ -271,6 +273,6 @@ class EndpointRegistrator extends WP_REST_Controller {
         $pagesOptions = $pageOptions->getPagesRelationship();
         return new WP_REST_Response($pagesOptions, 200);
     }
-    
+
 
 }

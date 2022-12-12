@@ -1,0 +1,6 @@
+[ 11/12/2022 04:43:13 PM ] Webhook => Atualizando post: 10429, do tipo curso_ec
+[ 11/12/2022 04:43:13 PM ] Webhook => https://eucapacito.com.br/api/revalidate?secret=b6733291dc8383f5940917a98863fa5123816d53c116a7fee42ae5db0140627c&entity=curso_ec&slug=venha-programar-em-java
+[ 11/12/2022 04:43:15 PM ] Webhook => Retorno api react: 
+[ 11/12/2022 04:43:22 PM ] Webhook => Atualizando post: 10429, do tipo curso_ec
+[ 11/12/2022 04:43:22 PM ] Webhook => https://eucapacito.com.br/api/revalidate?secret=b6733291dc8383f5940917a98863fa5123816d53c116a7fee42ae5db0140627c&entity=curso_ec&slug=venha-programar-em-java
+[ 11/12/2022 04:43:23 PM ] Webhook => Retorno api react: 
