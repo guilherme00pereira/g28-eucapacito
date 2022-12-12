@@ -168,8 +168,8 @@ class EndpointRegistrator extends WP_REST_Controller {
             $response->data[ 'duration' ] = get_post_meta($post->ID, '_learndash_course_grid_duration');
             if( !empty( $response->data[ 'featured_media' ] ) )
             {
-                //$imageLink = ImageConverter::generetaWebpFile( wp_get_attachment_image_src($response->data[ 'featured_media' ], "medium")[0] );
-                $response->data[ 'featured_image_src' ] = wp_get_attachment_image_src($response->data[ 'featured_media' ], "medium")[0];// $imageLink;
+                $imageLink = ImageConverter::generetaWebpFile( wp_get_attachment_image_src($response->data[ 'featured_media' ], "medium")[0] );
+                $response->data[ 'featured_image_src' ] = $imageLink;
             }
             return $response;
         }, 10, 3 );
@@ -177,20 +177,23 @@ class EndpointRegistrator extends WP_REST_Controller {
         add_filter( 'rest_prepare_post', function( $response, $post, $request ) {
             if( !empty( $response->data[ 'featured_media' ] ) )
             {
-                $response->data[ 'featured_image_src' ] =  wp_get_attachment_image_src($response->data[ 'featured_media' ], "medium")[0];
+                $imageLink = ImageConverter::generetaWebpFile( wp_get_attachment_image_src($response->data[ 'featured_media' ], "medium")[0] );
+                $response->data[ 'featured_image_src' ] =  $imageLink;
             }
             return $response;
         }, 10, 3 );
 
         add_filter( 'rest_prepare_jornada', function( $response, $post, $request ) {
-            $response->data[ 'image' ] = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0];
+            $imageLink = ImageConverter::generetaWebpFile( wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0] );
+            $response->data[ 'image' ] = $imageLink;
             $cursos = $response->data[ 'cursos_ec' ];
             $newCursos = [];
             foreach($cursos as $curso)
             {
                 $post = get_post($curso['ID']);
                 $curso['title'] = $post->post_title;
-                $curso['image'] = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0];
+                $imageThumb = ImageConverter::generetaWebpFile( wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0] );
+                $curso['image'] = $imageThumb;
                 $curso['post_content'] = "";
                 $newCursos[] = $curso;
             }
@@ -202,7 +205,8 @@ class EndpointRegistrator extends WP_REST_Controller {
             $cursos = $response->data[ 'cursos_ec' ];
             $imagem = $response->data[ 'imagem' ];
             if( !empty( $imagem ) ){
-                $imagem["guid"] = wp_get_attachment_image_src($imagem['ID'], "medium")[0];
+                $imageLink = ImageConverter::generetaWebpFile( wp_get_attachment_image_src($imagem['ID'], "medium")[0] );
+                $imagem["guid"] = $imageLink;
                 $response->data[ 'imagem' ] = $imagem;
             }
             $newCursos = [];
@@ -210,7 +214,8 @@ class EndpointRegistrator extends WP_REST_Controller {
             {
                 $post = get_post($curso['ID']);
                 $curso['title'] = $post->post_title;
-                $curso['image'] = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0];
+                $imageThumb = ImageConverter::generetaWebpFile( wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0] );
+                $curso['image'] = $imageThumb;
                 $curso['responsavel'] = $curso['responsavel']['guid'];
                 $newCursos[] = $curso;
             }
@@ -225,7 +230,8 @@ class EndpointRegistrator extends WP_REST_Controller {
             {
                 $post = get_post($curso['ID']);
                 $curso['title'] = $post->post_title;
-                $curso['image'] = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0];
+                $imageThumb = ImageConverter::generetaWebpFile( wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), "medium")[0] );
+                $curso['image'] = $imageThumb;
                 $newCursos[] = $curso;
             }
             $response->data[ 'cursos_ec' ] = $newCursos;

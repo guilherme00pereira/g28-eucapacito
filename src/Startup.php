@@ -6,6 +6,7 @@ use G28\Eucapacito\Core\CustomPostTypes;
 use G28\Eucapacito\Core\Plugin;
 use G28\Eucapacito\Api\EndpointRegistrator;
 use G28\Eucapacito\Api\Webhook;
+use G28\Eucapacito\CLI\CliRegistrator;
 use G28\Eucapacito\Core\Controller;
 use G28\Eucapacito\Options\MessageOptions;
 
@@ -28,6 +29,7 @@ class Startup {
             new CustomPostTypes();
 			new MessageOptions();
 			new Webhook();
+			new CliRegistrator();
 		} );
         add_action( 'rest_api_init', function (){
 			new EndpointRegistrator();
