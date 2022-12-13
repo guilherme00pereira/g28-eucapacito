@@ -2,6 +2,8 @@
 
 namespace G28\Eucapacito\Options;
 
+use G28\Eucapacito\Core\ImageConverter;
+
 class BannerOptions 
 {
     const HOME_BANNERS_OPTION           = 'eucapacito_home_banners';
@@ -54,6 +56,6 @@ class BannerOptions
             }
             //https://img.youtube.com/vi/<insert-youtube-video-id-here>/default.jpg
         }
-        return wp_get_attachment_image_src($id, $size)[0];
+        return ImageConverter::generetaWebpFile( wp_get_attachment_image_src($id, $size)[0] );
     }
 }

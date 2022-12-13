@@ -5,6 +5,7 @@ namespace G28\Eucapacito;
 use G28\Eucapacito\Core\CustomPostTypes;
 use G28\Eucapacito\Core\Plugin;
 use G28\Eucapacito\Api\EndpointRegistrator;
+use G28\Eucapacito\Api\FieldsRegistrator;
 use G28\Eucapacito\Api\Webhook;
 use G28\Eucapacito\CLI\CliRegistrator;
 use G28\Eucapacito\Core\Controller;
@@ -33,6 +34,7 @@ class Startup {
 		} );
         add_action( 'rest_api_init', function (){
 			new EndpointRegistrator();
+			new FieldsRegistrator();
 		});
 		add_action( 'admin_init', function() {
 			$subscriber = get_role('subscriber');

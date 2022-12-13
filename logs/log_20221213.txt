@@ -1,0 +1,3 @@
+[ 13/12/2022 11:12:28 AM ] Webhook => Atualizando post: 13176, do tipo post
+[ 13/12/2022 11:12:28 AM ] Webhook => https://eucapacito.com.br/api/revalidate?secret=b6733291dc8383f5940917a98863fa5123816d53c116a7fee42ae5db0140627c&entity=blog&slug=
+[ 13/12/2022 11:12:30 AM ] Webhook => Retorno api react: 

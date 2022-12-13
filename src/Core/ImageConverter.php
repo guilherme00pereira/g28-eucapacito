@@ -11,7 +11,7 @@ class ImageConverter
         $imageFile = $upload_dir['basedir'] . str_replace('uploads', '', $imageSubPath) . ".webp";
         if( file_exists( $imageFile ) ) 
         {
-            return $imageFile;
+            return $image_url . '.webp';
         }
         else
         {
