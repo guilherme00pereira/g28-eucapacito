@@ -24,8 +24,14 @@ class FieldsRegistrator
             $response->data[ 'duration' ] = get_post_meta($post->ID, '_learndash_course_grid_duration');
             if( !empty( $response->data[ 'featured_media' ] ) )
             {
-                $imageLink = ImageConverter::generetaWebpFile( wp_get_attachment_image_src($response->data[ 'featured_media' ], "medium")[0] );
+                $media = wp_get_attachment_image_src($response->data[ 'featured_media' ], "medium");
+                $imageLink = ImageConverter::generetaWebpFile( $media[0] );
                 $response->data[ 'featured_image_src' ] = $imageLink;
+                /* $response->data[ 'featured_image_src' ] = [
+                    "url"       => $imageLink,
+                    "width"     => $media[1],
+                    "height"    => $media[2],
+                ]; */
             }
             return $response;
         }, 10, 3 );

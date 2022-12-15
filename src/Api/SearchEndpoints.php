@@ -4,6 +4,7 @@ namespace G28\Eucapacito\Api;
 
 use G28\Eucapacito\Core\DBQueries;
 use G28\Eucapacito\Core\Logger;
+use G28\Eucapacito\Core\ImageConverter;
 use WP_REST_Response;
 use WP_Query;
 
@@ -71,12 +72,14 @@ class SearchEndpoints
             $query->the_post();
             $postId = get_the_ID();
 
+            $image  = ImageConverter::generetaWebpFile( wp_get_attachment_image_src( get_post_thumbnail_id($postId), "medium-large")[0] );
+
             $terms = wp_get_post_terms( $postId, $this->getTaxonomies());
             $courses[] = [
                 'id'                => $postId,
                 'slug'              => basename(get_permalink($postId)),
                 'title'             => $query->post->post_title,
-                'image'             => wp_get_attachment_image_src( get_post_thumbnail_id($postId), "medium-large")[0],
+                'image'             => $image,
                 'type'              => $query->post->post_type,
                 'logo'              => wp_get_attachment_image_src( get_post_meta( $postId, 'responsavel')[0], "medium-large")[0],
                 'terms'             => array_column($terms, 'term_id')
